@@ -55,7 +55,6 @@ app.use(function(req, res, next) {
   });
 
 
-
 app.post('/login', function (req, res) {
   User.login(req.body.user_name, req.body.password).then((r)=>{
     res.json({
@@ -66,6 +65,92 @@ app.post('/login', function (req, res) {
       errorMessage: "invalid user_name or password"
     })
   })
+})
+
+app.use((req, res, next)=>{
+  let token = req.body.token || req.query.token || req.headers['x-access-token'];
+  User.verifyAuthToken(token).then((r)=>{
+    req.user = r;
+    next();
+  })
+})
+
+app.get('/profile', function (req, res) {
+  req.user.getProfile(req.query.id).then((r)=>{
+    res.json(r)
+  }).catch((r)=>{
+    res.json({
+      errorMessage: "can't find profile"
+    })
+  })
+})
+
+app.get('/suggestedFriends', function (req, res) {
+  User.suggested_friends(req.user._id).then((r)=>{
+    res.json(r)
+  }).catch((r)=>{
+    res.json({
+      errorMessage: "can't find suggestedFriends"
+    })
+  })
+})
+
+app.get('/follow', function (req, res) {
+  User.follow(req.user._id.toString(), req.query.id).then((r)=>{
+      res.json({success: true});
+      User.getActiveFollwers(req.user._id).then((ids)=>{
+        notify([ids], req.user.name + " has followed " + r.name + " !", 'log');
+      });
+      notify([r._id.toString()], req.user.name + " has followed you !", 'notification');
+  }).catch((r)=>{
+    res.json({
+      errorMessage: "can't follow"
+    })
+  })
+})
+
+app.get('/unfollow', function (req, res) {
+  User.unfollow(req.user._id.toString(), req.query.id).then((r)=>{
+    res.json(r)
+  }).catch((r)=>{
+    res.json({
+      errorMessage: "can't unfollow"
+    })
+  })
+})
+
+app.post('/post/add', function (req, res) {
+  if (req.body.body) {
+    let post = new Post;
+    post.body = req.body.body;
+    post.user_id =  req.user._id;
+    post.parent = null;
+    post.date = new Date();
+    post.save(()=>{
+      res.json({success: true});
+      User.getActiveFollwers(req.user._id).then((ids)=>{
+        notify([ids], req.user.name + " has added new post !", 'log');
+      });
+    });
+  }
+})
+
+app.post('/post/share', function (req, res) {
+  if (req.body.id) {
+    let post = new Post;
+    post.user_id = req.user._id;
+    post.parent = mongoose.Types.ObjectId(req.body.id);
+    post.date = new Date();
+    post.save(()=>{
+      res.json({success: true});
+      User.getActiveFollwers(req.user._id).then((ids)=>{
+        notify([ids], req.user.name + " has shared a post !", 'log');
+      });
+      Post.findOne({_id:req.body.id}).then((r)=>{
+        notify([r.user_id.toString()], req.user.name + " has shared your post !", 'notification');
+      })
+    });
+  }
 })
 
 // port for the server

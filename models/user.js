@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Connection } = require('./connections');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { Post } = require('./posts');
 
 let schema = mongoose.Schema({
 	name: String,
@@ -9,6 +10,48 @@ let schema = mongoose.Schema({
 	token: Object,
 	socketId: String
 },{collection: 'users'})
+
+schema.methods.getProfile = async function(id) {
+	let currentUser = this;
+	let getStatus = function(firstId, secId) {
+		if (secId) {
+			firstId = mongoose.Types.ObjectId(firstId);
+			secId = mongoose.Types.ObjectId(secId);
+			return Connection.aggregate([
+					{
+						$match: {
+							$or: [
+								{from: firstId, to: secId},
+								{from: secId, to: firstId}
+							] 
+						}
+					}
+				]).then((r)=>{
+					let result = {};
+					let x = 0;
+					r.forEach((e)=>{
+						if (e.from.toString() == firstId){
+							x+=1;
+						}
+						if (e.to.toString() == firstId){
+							 x+=3;
+						}
+					});
+					return (x != 0) ? ((x == 1) ? "following" : ((x == 3) ? "follower" : "both") ) : "stranger";
+				})
+		}else{
+			return "owner"
+		}
+	}
+	if (id == currentUser._id)id = null;
+	return {
+		name: id ? await User.findOne({_id: id}).then(r=>r.name) : currentUser.name,
+		status: await getStatus(currentUser._id, id),
+		followers: await User.followers_list(id || currentUser._id),
+		following: await User.following_list(id || currentUser._id),
+		posts: await Post.getPosts(id || currentUser._id, true)
+	}
+}
 
 schema.statics.getActiveFollwers = function (id) {
 	let User = this;
@@ -55,7 +98,6 @@ schema.statics.verifyAuthToken = async function (token) {
 }
 
 schema.statics.login = async function (user_name, password) {
-	debugger;
 	let User = this;
 	let userResult = await User.findOne({ name: user_name }).exec();
 	if (userResult === null) throw new Error("invalid email or password");
@@ -97,7 +139,9 @@ schema.statics.follow = function(id1, id2){
 					from: mongoose.Types.ObjectId(id1),
 					to: mongoose.Types.ObjectId(id2)
 				});
-				return temp.save();
+				return temp.save().then((r)=>{
+					return User.findOne({_id:r.to});
+				});
 			}
 			throw new Error('connection already exists');
 		})
@@ -119,7 +163,7 @@ schema.statics.suggested_friends = function (id){
 	let steps = [
 		{
 			$sample: {
-				size: 3
+				size: 5
 			} 
 		},
 		{
@@ -137,7 +181,7 @@ schema.statics.suggested_friends = function (id){
 			          },
 			          {
 						$sample: {
-							size: 3
+							size: 5
 						} 
 					},
 		            {
