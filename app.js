@@ -5,46 +5,74 @@ const { User } = require('./models/user');
 const { Post } = require('./models/posts');
 const { Activity } = require('./models/activities');
 const { Connection } = require('./models/connections');
+require('app-module-path')
+  .addPath(__dirname);
+const express = require('express');
+const app = express();
+const server = require('http')
+  .Server(app);
+const path = require('path');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-// User.follow("5af31ab8cb33c516f0add6bc","5af31adfcb33c516f0add6bf").then((r)=>{
-// 	console.log(r);
-// }).catch((e)=>{
-// 	console.log(e);
-// });
-// User.follow("5af31ab8cb33c516f0add6bc","5af31c5dcb33c516f0add756").then((r)=>{
-// 	console.log(r);
-// }).catch((e)=>{
-// 	console.log(e);
-// });
-// User.follow("5af31adfcb33c516f0add6bf","5af32f8bcb33c516f0ade39e").then((r)=>{
-// 	console.log(r);
-// }).catch((e)=>{
-// 	console.log(e);
-// });
+//socket io
+const io = require('socket.io')(server);
+app.set('io', io);
+const { sockets, notify } = require('./socketsApi')(io);
+io.on('connection', function(socket) {
+  let token = socket.handshake.query.token;
+  User.verifyAuthToken(token).then((user)=>{
+    sockets[user._id] = socket.id;
+    console.log(sockets);
+    User.getActiveFollwers(user._id).then((ids)=>{
+      notify([ids], user.name + " is active now !", 'log');
+    });
+    socket.on('disconnect', function(data) {
+      delete sockets[user._id];
+      console.log(sockets);
+    });
+  }).catch(e=>console.log(e))
+});
+// to get the correct ip after nginx proxy
+app.set('trust proxy', true);
+
+// cors middleware
+app.use(cors());
+
+// parse request body
+app.use(bodyParser.json());
+// stay with the query string form not qs
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+// express static folder (public)
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next) {
+    res.setHeader("x-access-token", "*");
+    return next();
+  });
 
 
-// User.suggested_friends("5af31ab8cb33c516f0add6bc").then((r)=>{
-// 		console.log(JSON.stringify(r,null,2));
-// 	}).catch((e)=>{
-// 		console.log(e);
-// 	});
 
-// Activity.comment("5af31adfcb33c516f0add6bf", "5af33d721d5d613360e39912", "we ana kamaaaaan").then((r)=>{
-// 		console.log(JSON.stringify(r,null,2));
-// 	}).catch((e)=>{
-// 		console.log(e);
-// 	});
+app.post('/login', function (req, res) {
+  User.login(req.body.user_name, req.body.password).then((r)=>{
+    res.json({
+      token: r
+    })
+  }).catch((r)=>{
+    res.json({
+      errorMessage: "invalid user_name or password"
+    })
+  })
+})
 
-
-
-Post.getPosts("5af31adfcb33c516f0add6bf", false).then((r)=>{
-	console.log(JSON.stringify(r,null,2));
-}).catch((e)=>{
-	console.log(e);
+// port for the server
+const port = process.env.PORT || 3000;
+// listen to the port and logging verifying msg
+server.listen(port, () => {
+  console.log(`server started on port: ${port} @ ${new Date().toISOString()}`);
 });
 
-
-// let x = new Post;
-// x.user_id = mongoose.Types.ObjectId("5af31adfcb33c516f0add6bf");
-// x.parent = mongoose.Types.ObjectId("5af33d721d5d613360e39912");
-// x.save();
+module.exports = server;

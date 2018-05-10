@@ -1,9 +1,80 @@
 const mongoose = require('mongoose');
 const { Connection } = require('./connections');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 let schema = mongoose.Schema({
-	name: String
+	name: String,
+	password: String,
+	token: Object,
+	socketId: String
 },{collection: 'users'})
+
+schema.statics.getActiveFollwers = function (id) {
+	let User = this;
+	id = mongoose.Types.ObjectId(id);
+	return Connection.aggregate([
+		{
+			$match: {
+				to : id
+			}
+		},
+		{
+		   $lookup:
+		     {
+		       from: 'users',
+		       localField: 'from',
+		       foreignField: '_id',
+		       as: 'results'
+		     }
+		},
+		{
+			$addFields: {
+				'results': {$arrayElemAt: [ "$results", 0 ]}
+			}
+		},
+		{
+			$project: {
+				_id:0,
+				"_id": "$results._id"
+			}
+		}
+	]).then(r=>r.map(e=>e._id));
+}
+
+schema.statics.verifyAuthToken = async function (token) {
+	let User = this;
+	let decoded = jwt.verify(token, 'config.secret');
+    return User.findOne({
+      _id: decoded._id,
+      token: token
+    }).then((result)=>{
+    	if(result == null)throw new Error();
+    	return result
+  	})
+}
+
+schema.statics.login = async function (user_name, password) {
+	debugger;
+	let User = this;
+	let userResult = await User.findOne({ name: user_name }).exec();
+	if (userResult === null) throw new Error("invalid email or password");
+	if (bcrypt.compareSync(password, userResult.password)) {
+	  return await userResult.generateAuthToken();
+	}
+	throw new Error("invalid email or password");
+}
+
+schema.methods.generateAuthToken = function () {
+  const User = this;
+  let authToken = jwt.sign({
+    _id: User.id
+  },'config.secret');
+  User.token = authToken;
+  return User.save()
+    .then(() => authToken);
+};
+
 
 schema.statics.updateManyPromised = function(criteria, update){
 		return new Promise((resolve, reject)=>{
