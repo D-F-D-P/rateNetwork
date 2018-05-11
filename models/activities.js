@@ -5,7 +5,8 @@ let schema = mongoose.Schema({
 	type: String,
 	post_id: Object,
 	user_id: Object,
-	body: String
+    body: String,
+    value: float
 },{collection: 'activities'})
 
 schema.statics.updateManyPromised = function(criteria, update){
@@ -20,26 +21,22 @@ schema.statics.updateManyPromised = function(criteria, update){
 		});
 }
 
-schema.statics.like = function (user_id, post_id)
+schema.statics.rate = function (user_id, post_id,value)
 {
 	user_id = mongoose.Types.ObjectId(user_id);
 	post_id = mongoose.Types.ObjectId(post_id);
-	let Activity = this;
-	return Activity.find({user_id,post_id}).then((res)=>{
-		if(res.length == 0){
-			let temp = new Activity({user_id,post_id,date: new Date(),type: "like"});
-			return temp.save();
-		}
-		throw new Error('activity already exists');
-	})
+    let Activity = this;
+    Activity.remove({ user_id, post_id, type: "rate"});
+    let temp = new Activity({ user_id, post_id, date: new Date(), value, type: "rate" });
+    return temp.save();
 }
 
-schema.statics.unlike = function (user_id, post_id)
+schema.statics.unrate = function (user_id, post_id)
 {
 	user_id = mongoose.Types.ObjectId(user_id);
 	post_id = mongoose.Types.ObjectId(post_id);
 	let Activity = this;
-	return Activity.remove({user_id,post_id});
+    return Activity.remove({ user_id, post_id, type: "rate"});
 }
 
 schema.statics.comment = function (user_id, post_id, body)
