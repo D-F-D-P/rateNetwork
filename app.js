@@ -95,28 +95,39 @@ app.get('/suggestedFriends', function (req, res) {
   })
 })
 
-app.get('/follow', function (req, res) {
-  User.follow(req.user._id.toString(), req.query.id).then((r)=>{
-      res.json({success: true});
-      User.getActiveFollwers(req.user._id).then((ids)=>{
-        notify([ids], req.user.name + " has followed " + r.name + " !", 'log');
-      });
-      notify([r._id.toString()], req.user.name + " has followed you !", 'notification');
-  }).catch((r)=>{
-    res.json({
-      errorMessage: "can't follow"
+app.post('/follow', function (req, res) {
+  if (req.body.id) {
+      User.follow(req.user._id.toString(), req.body.id).then((r)=>{
+        res.json({success: true});
+        User.findOne({_id: req.body.id}).then((r)=>{
+          User.getActiveFollwers(req.user._id).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r._id.toString());
+            notify([ids], req.user.name + " has followed " + r.name + " !", 'log');
+          });
+          User.getActiveFollwers(r._id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r._id.toString());
+            notify([ids], req.user.name + " has followed " + r.name + " !", 'log');
+          });
+        })
+        notify([r._id.toString()], req.user.name + " has followed you !", 'notification');
+    }).catch((r)=>{
+      res.json({
+        errorMessage: "can't follow"
+      })
     })
-  })
+  }
 })
 
-app.get('/unfollow', function (req, res) {
-  User.unfollow(req.user._id.toString(), req.query.id).then((r)=>{
-    res.json(r)
-  }).catch((r)=>{
-    res.json({
-      errorMessage: "can't unfollow"
+app.post('/unfollow', function (req, res) {
+  if (req.body.id) {
+    User.unfollow(req.user._id.toString(), req.body.id).then((r)=>{
+        res.json({success: true});
+    }).catch((r)=>{
+      res.json({
+        errorMessage: "can't unfollow"
+      })
     })
-  })
+  }
 })
 
 app.post('/post/add', function (req, res) {
@@ -126,11 +137,21 @@ app.post('/post/add', function (req, res) {
     post.user_id =  req.user._id;
     post.parent = null;
     post.date = new Date();
-    post.save(()=>{
+    post.save().then(()=>{
       res.json({success: true});
+      debugger;
       User.getActiveFollwers(req.user._id).then((ids)=>{
-        notify([ids], req.user.name + " has added new post !", 'log');
-      });
+          debugger;
+          notify([ids], req.user.name + " has added new post !", 'log');
+        });
+    });
+  }
+})
+
+app.post('/post/remove', function (req, res) {
+  if (req.body.id) {
+    Post.remove({_id: req.body.id, user_id: req.user._id}).then(()=>{
+      res.json({success: true});
     });
   }
 })
@@ -143,12 +164,163 @@ app.post('/post/share', function (req, res) {
     post.date = new Date();
     post.save(()=>{
       res.json({success: true});
-      User.getActiveFollwers(req.user._id).then((ids)=>{
-        notify([ids], req.user.name + " has shared a post !", 'log');
-      });
-      Post.findOne({_id:req.body.id}).then((r)=>{
+      Post.aggregate([
+          {
+            $match: {
+              _id: mongoose.Types.ObjectId(req.body.id)
+            }
+          },
+          {
+             $lookup:
+               {
+                 from: 'users',
+                 localField: 'user_id',
+                 foreignField: '_id',
+                 as: 'results'
+               }
+          },
+          {
+            $addFields: {
+              'results': {$arrayElemAt: [ "$results", 0 ]}
+            }
+          },
+          {
+            $addFields: {
+              "name": "$results.name"
+            }
+          },
+          {
+            $project: {
+              results:0,
+            }
+          }
+        ]).then((r)=>{
+        r = r && r[0];
+        User.getActiveFollwers(req.user._id).then((ids)=>{
+          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+          notify([ids], req.user.name + " has shared " + r.name + "'s post !", 'log');
+        });
+        User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+          notify([ids], req.user.name + " has shared " + r.name + "'s post !", 'log');
+        });
         notify([r.user_id.toString()], req.user.name + " has shared your post !", 'notification');
       })
+    });
+  }
+})
+
+app.post('/post/comment', function (req, res) {
+  if (req.body.id && req.body.body) {
+    Activity.comment(req.user._id, req.body.id, req.body.body).then(()=>{
+      res.json({success: true});
+      Post.aggregate([
+          {
+            $match: {
+              _id: mongoose.Types.ObjectId(req.body.id)
+            }
+          },
+          {
+             $lookup:
+               {
+                 from: 'users',
+                 localField: 'user_id',
+                 foreignField: '_id',
+                 as: 'results'
+               }
+          },
+          {
+            $addFields: {
+              'results': {$arrayElemAt: [ "$results", 0 ]}
+            }
+          },
+          {
+            $addFields: {
+              "name": "$results.name"
+            }
+          },
+          {
+            $project: {
+              results:0,
+            }
+          }
+        ]).then((r)=>{
+        r = r && r[0];
+        User.getActiveFollwers(req.user._id).then((ids)=>{
+          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+          notify([ids], req.user.name + " has commented on " + r.name + "'s post !", 'log');
+        });
+        User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+          notify([ids], req.user.name + " has commented on " + r.name + "'s post !", 'log');
+        });
+        notify([r.user_id.toString()], req.user.name + " has commented on your post !", 'notification');
+      })
+    });
+  }
+})
+
+app.post('/post/rate', function (req, res) {
+  if (req.body.id && req.body.rate) {
+    Activity.rate(req.user._id, req.body.id, req.body.rate).then(()=>{
+      res.json({success: true});
+      Post.aggregate([
+          {
+            $match: {
+              _id: mongoose.Types.ObjectId(req.body.id)
+            }
+          },
+          {
+             $lookup:
+               {
+                 from: 'users',
+                 localField: 'user_id',
+                 foreignField: '_id',
+                 as: 'results'
+               }
+          },
+          {
+            $addFields: {
+              'results': {$arrayElemAt: [ "$results", 0 ]}
+            }
+          },
+          {
+            $addFields: {
+              "name": "$results.name"
+            }
+          },
+          {
+            $project: {
+              results:0,
+            }
+          }
+        ]).then((r)=>{
+        r = r && r[0];
+        User.getActiveFollwers(req.user._id).then((ids)=>{
+          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+          notify([ids], req.user.name + " has rated " + r.name + "'s post !", 'log');
+        });
+        User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+          notify([ids], req.user.name + " has rated " + r.name + "'s post !", 'log');
+        });
+        notify([r.user_id.toString()], req.user.name + " has rated your post !", 'notification');
+      })
+    });
+  }
+})
+
+app.post('/post/unrate', function (req, res) {
+  if (req.body.id) {
+    Activity.rate(req.user._id, req.body.id).then(()=>{
+      res.json({success: true});
+    });
+  }
+})
+
+app.post('/post/comment/remove', function (req, res) {
+  if (req.body.id) {
+    Activity.remove({_id: req.body.id, user_id: req.user._id}).then(()=>{
+      res.json({success: true});
     });
   }
 })
