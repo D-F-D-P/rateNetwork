@@ -208,6 +208,17 @@ a.log {
   border-radius: 2px;
   font-weight: 400;
   cursor: pointer; }
+  .btn-follow2 {
+  background-color: rgba(211, 139, 175, 0.2);
+  color: #746566a8;
+  border: none;
+  align-self: center;
+  padding: .5rem 1.2rem;
+  font-size: 1.6rem;
+  align-self: flex-end;
+  border-radius: 2px;
+  font-weight: 400;
+  cursor: pointer; }
 
 .btn-remove {
   background-color: transparent;
@@ -555,7 +566,8 @@ a.log {
       background-color: #d38baf;
       overflow: hidden;
       border-radius: 50%;
-      border: 2px solid #4e4450; }
+      border: 2px solid #4e4450; 
+      position: relative;}
       @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
         .header .user__shape {
           -webkit-clip-path: circle(50% at 50% 50%);
@@ -676,7 +688,8 @@ a.log {
             overflow: hidden;
             border-radius: 50%;
             border: 1px solid #746566a8;
-            align-self: center; }
+            align-self: center; 
+            position: relative;}
             @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
               .content__area .posts__post-head .post-head__shape {
                 -webkit-clip-path: circle(50% at 50% 50%);
@@ -747,7 +760,8 @@ a.log {
         overflow: hidden;
         border-radius: 50%;
         border: 1px solid #746566a8;
-        align-self: center; }
+        align-self: center; 
+        position: relative;}
         @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
           .content .connections .connection__shape {
             -webkit-clip-path: circle(50% at 50% 50%);
@@ -812,7 +826,8 @@ a.log {
     border: 1px solid #746566a8;
     align-self: center;
     display: flex;
-    align-items: center; }
+    align-items: center; 
+    position: relative;}
     @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
       .person__shape {
         -webkit-clip-path: circle(50% at 50% 50%);
@@ -863,6 +878,16 @@ a.log {
 
 .link {
   cursor: pointer;
+}
+.caption-letter{
+  position: absolute;
+  top: 15%;
+  left: 34%;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 500%;
+  backface-visibility: hidden;
 }
 
 @import '~css-star-rating/scss/star-rating';

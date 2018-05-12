@@ -12,10 +12,10 @@
                     <h2 class="heading-primary--aside">suggested connections</h2>
                     <div class="s-connections">
                         <div class="person" *ngFor="let one of suggestedFriends">
-                            <a href="#" class="person__wraper">
+                            <a  class="person__wraper">
 
                                 <figure class="person__shape">
-                                    <img src="assets/img/lorde.jpg" alt="Person on a tour" class="person__img">
+                    <figcaption class="caption-letter">{{one.name.slice(0,1)}}</figcaption>                                    
                                 </figure>
                                 <div class="person__caption">
                                     <a [routerLink]="['/profile']" [queryParams]="{'id':one._id}" class="person__name">{{one.name}}</a>
@@ -31,28 +31,28 @@
                         <h2 class="heading-primary--aside">activity log</h2>
                         <div class="activity-log__logs">
                             <div class="activity-log__event">
-                                <a href="#" class="log"><strong>Nader Yasser</strong></a> rated your post
+                                <a  class="log"><strong>Nader Yasser</strong></a> rated your post
                             </div>
                             <div class="activity-log__event">
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> rated your post
+                                    <a  class="log"><strong>Nader Yasser</strong></a> rated your post
                             </div>
                             <div class="activity-log__event">
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> followed
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a>
+                                    <a  class="log"><strong>Nader Yasser</strong></a> followed
+                                    <a  class="log"><strong>Nader Yasser</strong></a>
                             </div>
                             <div class="activity-log__event">
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> followed
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a>
+                                    <a  class="log"><strong>Nader Yasser</strong></a> followed
+                                    <a  class="log"><strong>Nader Yasser</strong></a>
                             </div>
                             <div class="activity-log__event">
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> rated
-                                    <a href="#" class="log"><strong>Nader Yasser</strong></a>'s post
+                                    <a  class="log"><strong>Nader Yasser</strong></a> rated
+                                    <a  class="log"><strong>Nader Yasser</strong></a>'s post
                             </div>
                         </div>
                     </div>
                 <div class="links">
                     <a routerLink="/profile" class="link">profile</a>
-                    <a href="#" class="link">logout</a>
+                    <a  class="link">logout</a>
                 </div>
             </div>
 
@@ -75,9 +75,9 @@
                                         <span class="shared"> > from <a [routerLink]="['/profile']" [queryParams]="{'id':post.results.user_id}" class="log">{{post.results.name}}</a></span>
                                     </div>
                                         <div class="posts__post-head">
-                                    <a href="#">
+                                    <a >
                                             <figure class="post-head__shape">
-                                                <!-- <img src="img/childish gambino.jpg" alt="Person on a tour" class="post-head__img"> -->
+                    <figcaption class="caption-letter">{{post.name.slice(0,1)}}</figcaption>
                                             </figure>
                                             <div class="post-head__caption">
                                                 <a [routerLink]="['/profile']" [queryParams]="{'id':post.user_id}" class="post-head__name">{{post.name}}</a>

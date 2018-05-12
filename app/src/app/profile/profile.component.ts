@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   followers = [];
   following = [];
   name = '';
+  status = '';
   section = 'activity';
   rate = 0.0;
   posts = [];
@@ -25,6 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private appService: AppService) { }
 
   updateSuggestions() {
+    this.updateView(this.id);
     this.suggestedFriends = this.appService.suggestedFriends;
   }
 
@@ -34,6 +36,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.followers = response.followers;
         this.following = response.following;
         this.name = response.name;
+        this.status = response.status;
         this.id = this.appService.id;
         let i = 0;
         this.posts = response.posts;
@@ -77,6 +80,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   follow(id) {
+    this.appService.follow(id).subscribe(()=>this.updateSuggestions());
+  }
+
+  unfollow(id) {
     this.appService.follow(id).subscribe(()=>this.updateSuggestions());
   }
 
