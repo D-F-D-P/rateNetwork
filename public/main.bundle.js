@@ -27,7 +27,7 @@ module.exports = ""
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <section class=\"section-profile\">  \n\t<app-header class=\"header\"></app-header>\n\t<app-content class=\"content\"></app-content>\n</section>\n -->\n\n<router-outlet></router-outlet>"
+module.exports = "<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -174,11 +174,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+var Subject_1 = __webpack_require__("./node_modules/rxjs/_esm5/Subject.js");
 var AppService = /** @class */ (function () {
     function AppService(http) {
         this.http = http;
     }
     AppService.prototype.hasToken = function () {
+        var _this = this;
         if (this.token && this.id) {
             return true;
         }
@@ -193,6 +195,11 @@ var AppService = /** @class */ (function () {
                 // socket.on("notification", (m)=>{
                 //   console.log('[notification] : ',m);
                 // });
+                this.suggestedFriendsSubject = new Subject_1.Subject();
+                this.getSuggestedFriends().subscribe(function (r) {
+                    _this.suggestedFriends = r;
+                    _this.suggestedFriendsSubject.next();
+                });
             }
             return (this.token && this.id) ? true : false;
         }
@@ -207,12 +214,59 @@ var AppService = /** @class */ (function () {
         var headers = new http_1.Headers({ 'x-access-token': this.token });
         return this.http.get('/api/profile' + (id ? ('?id=' + id) : ''), { headers: headers }).map(function (res) { return res.json(); });
     };
+    AppService.prototype.getHome = function () {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.get('/api/home', { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.getSuggestedFriends = function () {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.get('/api/suggestedFriends', { headers: headers }).map(function (res) { return res.json(); });
+    };
     AppService.prototype.login = function (user_name, password) {
         return this.http.post('/api/login', { user_name: user_name, password: password }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.follow = function (id) {
+        var _this = this;
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/follow', { id: id }, { headers: headers }).map(function (res) {
+            _this.getSuggestedFriends().subscribe(function (r) {
+                _this.suggestedFriends = r;
+                _this.suggestedFriendsSubject.next();
+            });
+            return res.json();
+        });
+    };
+    AppService.prototype.unfollow = function (id) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/unfollow', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.addPost = function (body) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/post/add', { body: body }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.removePost = function (id) {
         var headers = new http_1.Headers({ 'x-access-token': this.token });
         return this.http.post('/api/post/remove', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.sharePost = function (id) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/post/share', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.ratePost = function (id, rate) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/post/rate', { id: id, rate: rate }, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.unratePost = function (id) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/post/unrate', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.addComment = function (id, body) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/post/comment', { id: id, body: body }, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    AppService.prototype.removeComment = function (id) {
+        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        return this.http.post('/api/post/comment/remove', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService = __decorate([
         core_1.Injectable(),
@@ -685,7 +739,7 @@ module.exports = ""
 /***/ "./src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"section-home\">\n\n        <div class=\"content\">\n            <div class=\"content__aside\">\n                <div class=\"search\">\n                    <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                    <button class=\"search__button\">\n                        <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                    </button>\n                </div>\n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\">\n                            <a href=\"#\" class=\"person__wraper\">\n\n                                <figure class=\"person__shape\">\n                                    <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"person__img\">\n                                </figure>\n                                <div class=\"person__caption\">\n                                    <div class=\"person__name\">Lorde</div>\n                                    <div class=\"person__rate\">4.3</div>\n\n                                </div>\n                            </a>\n                            <button class=\"btn-follow\">follow</button>\n\n                        </div>\n                        <div class=\"person\">\n                            <a href=\"#\" class=\"person__wraper\">\n                                <figure class=\"person__shape\">\n                                    <img src=\"assets/img/childish gambino.jpg\" alt=\"Person on a tour\" class=\"person__img\">\n                                </figure>\n                                <div class=\"person__caption\">\n                                    <div class=\"person__name\">Childish Gambino</div>\n                                    <div class=\"person__rate\">4.1</div>\n\n                                </div>\n                            </a>\n                            <button class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\">\n                                <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>'s post\n                            </div>\n                        </div>\n                    </div>\n                <div class=\"links\">\n                    <a href=\"#\" class=\"link\">profile</a>\n                    <a href=\"#\" class=\"link\">logout</a>\n                </div>\n            </div>\n\n\n            <div class=\"content__area\">\n\n\n                <div class=\"posts\">\n                    <div class=\"posts__add-post\">\n                        <form action=\"\" class=\"posts__add\">\n                            <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\">\n                            <button type=\"submit\" class=\"btn-post\">Post</button>\n                        </form>\n                    </div>\n\n\n                    <div class=\"posts__post\">\n                        <a href=\"#\">\n                            <div class=\"posts__post-head\">\n                                <figure class=\"post-head__shape\">\n                                    <img src=\"assets/img/childish gambino.jpg\" alt=\"Person on a tour\" class=\"post-head__img\">\n                                </figure>\n                                <div class=\"post-head__caption\">\n                                    <div class=\"post-head__name\">Childish Gambino</div>\n                                </div>\n                            </div>\n                        </a>\n\n                        <div class=\"posts__post-body\">\n                            <p>\n                                We just wanna party Party just for you We just want the money Money just for you I know you wanna party Party just for me\n                            </p>\n                        </div>\n                        <div class=\"posts__post-rate\"></div>\n                        <div class=\"posts__post-comments\">\n\n                            <h2 class=\"comments-head\">Comments</h2>\n                            <div class=\"post__comment\">\n                                <a href=\"#\" class=\"comment-name\">Lorde</a>\n                                <p class=\"comment-body\">get some money , black man Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque,\n                                    nostrum consequatur. Et a eum quibusdam, dignissimos possimus culpa non consequatur,\n                                    quod voluptatibus facere ipsam deserunt. Cumque officia maiores omnis deleniti.</p>\n                            </div>\n                            <form action=\"\" class=\"comments__add\">\n                                <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\">\n                                <button type=\"submit\" class=\"btn-post\">comment</button>\n                            </form>\n                        </div>\n                    </div>\n                    \n\n\n                </div>\n\n\n            </div>\n\n\n        </div>\n\n    </section>"
+module.exports = "<section class=\"section-home\">\n\n        <div class=\"content\">\n            <div class=\"content__aside\">\n                <div class=\"search\">\n                    <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                    <button class=\"search__button\">\n                        <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                    </button>\n                </div>\n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\" *ngFor=\"let one of suggestedFriends\">\n                            <a href=\"#\" class=\"person__wraper\">\n\n                                <figure class=\"person__shape\">\n                                    <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"person__img\">\n                                </figure>\n                                <div class=\"person__caption\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':one._id}\" class=\"person__name\">{{one.name}}</a>\n\n                                </div>\n                            </a>\n                            <button (click)=\"follow(one._id)\" class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\">\n                                <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>'s post\n                            </div>\n                        </div>\n                    </div>\n                <div class=\"links\">\n                    <a routerLink=\"/profile\" class=\"link\">profile</a>\n                    <a href=\"#\" class=\"link\">logout</a>\n                </div>\n            </div>\n\n\n            <div class=\"content__area\">\n\n\n                <div class=\"posts\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\" #in>\n                                <button (click)=\"addPost(in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n\n\n                        <div class=\"posts__post\" *ngFor=\"let post of posts;let i of index\">\n                                    <div class=\"post-shared\" *ngIf=\"post.shared\">\n                                        <!-- <img src=\"/assets/img/share-symbol.svg\" class=\"share-icon\" > -->\n                                        <span class=\"shared\"> > from <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\" class=\"log\">{{post.results.name}}</a></span>\n                                    </div>\n                                        <div class=\"posts__post-head\">\n                                    <a href=\"#\">\n                                            <figure class=\"post-head__shape\">\n                                                <!-- <img src=\"img/childish gambino.jpg\" alt=\"Person on a tour\" class=\"post-head__img\"> -->\n                                            </figure>\n                                            <div class=\"post-head__caption\">\n                                                <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\">{{post.name}}</a>\n                                                <span class=\"date\">{{post.date | date}}</span>\n                                            </div>\n                                        </a>\n                                        <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                        \n                                    </div>\n            \n                                    <div class=\"posts__post-body\">\n                                        <p>\n                                            {{post.body}}\n                                        </p>\n                                    </div>\n                                    <div class=\"posts__post-options\">\n                                        <div class=\"post-rate\"></div>\n                                        <button (click)=\"sharePost(post._id)\" class=\"btn-remove\">share </button>\n                                        \n                                    </div>\n                                    <div class=\"posts__post-comments\">\n            \n                                        <div class=\"comments-head\">Comments</div>\n                                        <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                           <div class=\"wraper\">\n                                               <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}}</a>\n                                               <span class=\"date\">{{comment.date | date}}</span>\n                                           </div>\n                                            \n                                            <p class=\"comment-body\">{{comment.body}}</p>\n                                        <button *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                               \n                                        </div>\n                                        <form action=\"\" class=\"comments__add\">\n                                            <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\" #in>\n                                            <button (click)=\"addComment(post._id, in.value);in.value = ''\" type=\"submit\" class=\"btn-post\">comment</button>\n                                        </form>\n                                    </div>\n                                </div>   \n    \n                    </div>\n\n\n            </div>\n\n\n        </div>\n\n    </section>"
 
 /***/ }),
 
@@ -705,10 +759,62 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var app_service_1 = __webpack_require__("./src/app/app.service.ts");
 var HomeComponent = /** @class */ (function () {
-    function HomeComponent() {
+    function HomeComponent(appService) {
+        this.appService = appService;
+        this.id = '';
+        this.name = '';
+        this.posts = [];
     }
+    HomeComponent.prototype.updateSuggestions = function () {
+        this.suggestedFriends = this.appService.suggestedFriends;
+    };
+    HomeComponent.prototype.updateView = function () {
+        var _this = this;
+        this.appService.getHome().subscribe(function (response) {
+            _this.name = response.name;
+            _this.id = _this.appService.id;
+            _this.posts = response.posts;
+        });
+    };
     HomeComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.updateSuggestions();
+        this.appService.suggestedFriendsSubject.subscribe(function () {
+            _this.updateSuggestions();
+        });
+        this.updateView();
+    };
+    HomeComponent.prototype.removePost = function (id) {
+        var _this = this;
+        this.appService.removePost(id).subscribe(function () { return _this.updateView(); });
+    };
+    HomeComponent.prototype.sharePost = function (id) {
+        var _this = this;
+        this.appService.sharePost(id).subscribe(function () { return _this.updateView(); });
+    };
+    HomeComponent.prototype.addComment = function (id, body) {
+        var _this = this;
+        this.appService.addComment(id, body).subscribe(function () { return _this.updateView(); });
+    };
+    HomeComponent.prototype.addPost = function (body) {
+        var _this = this;
+        this.appService.addPost(body).subscribe(function () { return _this.updateView(); });
+    };
+    HomeComponent.prototype.removeComment = function (id) {
+        var _this = this;
+        this.appService.removeComment(id).subscribe(function () { return _this.updateView(); });
+    };
+    HomeComponent.prototype.follow = function (id) {
+        var _this = this;
+        this.appService.follow(id).subscribe(function () { return _this.updateSuggestions(); });
+    };
+    HomeComponent.prototype.compare = function (id) {
+        if (id == this.id) {
+            return true;
+        }
+        return false;
     };
     HomeComponent = __decorate([
         core_1.Component({
@@ -716,7 +822,7 @@ var HomeComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/home/home.component.html"),
             styles: [__webpack_require__("./src/app/home/home.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [app_service_1.AppService])
     ], HomeComponent);
     return HomeComponent;
 }());
@@ -796,7 +902,7 @@ module.exports = ""
 /***/ "./src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"section-profile\">\n        <div class=\"header\">\n\n            <a href=\"#\" class=\"user\">\n                <figure class=\"user__shape\">\n                    <img src=\"assets/img/lana.jpg\" alt=\"Person on a tour\" class=\"user__img\">\n                </figure>\n                <div class=\"user__caption\">\n                    <div class=\"user__name\">{{name}}</div>\n                    <div class=\"user__rate\">{{rate || '0.0'}}</div>\n                </div>\n            </a>\n\n        </div>\n\n        <div class=\"content\">\n                <div class=\"content__aside\">\n                        <div class=\"search\">\n                                <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                                <button class=\"search__button\">\n                                    <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                                </button>\n                            </div>\n                    <div class=\"suggested-connections\">\n                        <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                        <div class=\"s-connections\">\n                            <div class=\"person\">\n                                <a href=\"#\" class=\"person__wraper\">\n    \n                                    <figure class=\"person__shape\">\n                                        <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"person__img\">\n                                    </figure>\n                                    <div class=\"person__caption\">\n                                        <div class=\"person__name\">Lorde</div>\n    \n                                    </div>\n                                </a>\n                                <button class=\"btn-follow\">follow</button>\n    \n                            </div>\n                            <div class=\"person\">\n                                <a href=\"#\" class=\"person__wraper\">\n                                    <figure class=\"person__shape\">\n                                        <img src=\"assets/img/childish gambino.jpg\" alt=\"Person on a tour\" class=\"person__img\">\n                                    </figure>\n                                    <div class=\"person__caption\">\n                                        <div class=\"person__name\">Childish Gambino</div>\n    \n                                    </div>\n                                </a>\n                                <button class=\"btn-follow\">follow</button>\n    \n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\">\n                                <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>'s post\n                            </div>\n                        </div>\n                    </div>\n    \n                    <div class=\"links\">\n                        <a routerLink=\"/home\" class=\"link\">home</a>\n                        <a  class=\"link\">logout</a>\n                    </div>\n                </div>\n\n            <div class=\"content__area\">\n                <div class=\"navigation\">\n                    <ul class=\"navigation__nav\">\n                        <li>\n                            <a (click)=\"this.section = 'activity'\" [ngClass]=\"{'active': this.section == 'activity'}\" class=\"link\">activity</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'followers'\" [ngClass]=\"{'active': this.section == 'followers'}\" class=\"link\">followers ({{followers.length}})</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'following'\" [ngClass]=\"{'active': this.section == 'following'}\" class=\"link\">following ({{following.length}})</a>\n                        </li>\n                    </ul>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'followers'\">\n                   <div class=\"connection\" *ngFor=\"let follower of followers\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <figure class=\"connection__shape\">\n                            <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"connection__img\">\n                        </figure>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'following'\">\n                   <div class=\"connection\" *ngFor=\"let follower of following\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <figure class=\"connection__shape\">\n                            <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"connection__img\">\n                        </figure>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"posts\" *ngIf=\"this.section == 'activity'\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\">\n                                <button type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n    \n    \n                        <div class=\"posts__post\" *ngFor=\"let post of posts\">\n                                <div class=\"posts__post-head\">\n                            <a href=\"#\">\n                                    <figure class=\"post-head__shape\">\n                                        <img src=\"/assets/img/childish gambino.jpg\" alt=\"Person on a tour\" class=\"post-head__img\">\n                                    </figure>\n                                    <div class=\"post-head__caption\">\n                                        <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\"> {{post.name}} -- <a *ngIf=\"post.shared\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\"> shared from {{post.results.name}}</a></a>\n                                        <a class=\"post-head__name\"> {{post.date | date}}</a>\n                                    </div>\n                                </a>\n                                <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\">remove</button>\n                                \n                            </div>\n    \n                            <div class=\"posts__post-body\">\n                                <p>{{post.body}}</p>\n                            </div>\n                            <div class=\"posts__post-options\">\n                                <div class=\"post-rate\"></div>\n                                <button class=\"btn-remove\" (click)=\"sharePost(post.shared ? post.results._id : post._id)\">share    </button>\n                                \n                            </div>\n                            <div class=\"posts__post-comments\">\n    \n                                <h2 class=\"comments-head\">Comments</h2>\n                                <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}} -- </a>\n                                    <a class=\"comment-name\"> {{comment.date | date}}</a>\n                                    <p class=\"comment-body\">{{comment.body}}</p>\n                                    <a *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\">remove</a>\n                                </div>\n                                <form action=\"\" class=\"comments__add\">\n                                    <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\">\n                                    <button type=\"submit\" class=\"btn-post\">comment</button>\n                                </form>\n                            </div>\n                        </div>\n                        \n    \n                    </div>\n\n                </div>\n\n\n            </div>\n\n    </section>"
+module.exports = "<section class=\"section-profile\">\n        <div class=\"header\">\n\n            <a href=\"#\" class=\"user\">\n                <figure class=\"user__shape\">\n                    <img src=\"assets/img/lana.jpg\" alt=\"Person on a tour\" class=\"user__img\">\n                </figure>\n                <div class=\"user__caption\">\n                    <div class=\"user__name\">{{name}}</div>\n                    <div class=\"user__rate\">{{rate || '0.0'}}</div>\n                </div>\n            </a>\n\n        </div>\n\n        <div class=\"content\">\n                <div class=\"content__aside\">\n                        <div class=\"search\">\n                                <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                                <button class=\"search__button\">\n                                    <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                                </button>\n                            </div>\n                    \n                \n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\" *ngFor=\"let one of suggestedFriends\">\n                            <a href=\"#\" class=\"person__wraper\">\n\n                                <figure class=\"person__shape\">\n                                    <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"person__img\">\n                                </figure>\n                                <div class=\"person__caption\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':one._id}\" class=\"person__name\">{{one.name}}</a>\n\n                                </div>\n                            </a>\n                            <button (click)=\"follow(one._id)\" class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                    <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\">\n                                <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a> rated\n                                    <a href=\"#\" class=\"log\"><strong>Nader Yasser</strong></a>'s post\n                            </div>\n                        </div>\n                    </div>\n    \n                    <div class=\"links\">\n                        <a routerLink=\"/home\" class=\"link\">home</a>\n                        <a  class=\"link\">logout</a>\n                    </div>\n                </div>\n\n            <div class=\"content__area\">\n                <div class=\"navigation\">\n                    <ul class=\"navigation__nav\">\n                        <li>\n                            <a (click)=\"this.section = 'activity'\" [ngClass]=\"{'active': this.section == 'activity'}\" class=\"link\">activity</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'followers'\" [ngClass]=\"{'active': this.section == 'followers'}\" class=\"link\">followers ({{followers.length}})</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'following'\" [ngClass]=\"{'active': this.section == 'following'}\" class=\"link\">following ({{following.length}})</a>\n                        </li>\n                    </ul>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'followers'\">\n                   <div class=\"connection\" *ngFor=\"let follower of followers\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <figure class=\"connection__shape\">\n                            <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"connection__img\">\n                        </figure>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'following'\">\n                   <div class=\"connection\" *ngFor=\"let follower of following\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <figure class=\"connection__shape\">\n                            <img src=\"assets/img/lorde.jpg\" alt=\"Person on a tour\" class=\"connection__img\">\n                        </figure>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"posts\" *ngIf=\"this.section == 'activity'\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\" #in>\n                                <button (click)=\"addPost(in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n\n\n                        <div class=\"posts__post\" *ngFor=\"let post of posts;let i of index\">\n                                    <div class=\"post-shared\" *ngIf=\"post.shared\">\n                                        <!-- <img src=\"/assets/img/share-symbol.svg\" class=\"share-icon\" > -->\n                                        <span class=\"shared\"> > from <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\" class=\"log\">{{post.results.name}}</a></span>\n                                    </div>\n                                        <div class=\"posts__post-head\">\n                                    <a href=\"#\">\n                                            <figure class=\"post-head__shape\">\n                                                <!-- <img src=\"img/childish gambino.jpg\" alt=\"Person on a tour\" class=\"post-head__img\"> -->\n                                            </figure>\n                                            <div class=\"post-head__caption\">\n                                                <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\">{{post.name}}</a>\n                                                <span class=\"date\">{{post.date | date}}</span>\n                                            </div>\n                                        </a>\n                                        <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                        \n                                    </div>\n            \n                                    <div class=\"posts__post-body\">\n                                        <p>\n                                            {{post.body}}\n                                        </p>\n                                    </div>\n                                    <div class=\"posts__post-options\">\n                                        <div class=\"post-rate\"></div>\n                                        <button (click)=\"sharePost(post._id)\" class=\"btn-remove\">share </button>\n                                        \n                                    </div>\n                                    <div class=\"posts__post-comments\">\n            \n                                        <div class=\"comments-head\">Comments</div>\n                                        <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                           <div class=\"wraper\">\n                                               <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}}</a>\n                                               <span class=\"date\">{{comment.date | date}}</span>\n                                           </div>\n                                            \n                                            <p class=\"comment-body\">{{comment.body}}</p>\n                                        <button *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                               \n                                        </div>\n                                        <form action=\"\" class=\"comments__add\">\n                                            <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\" #in>\n                                            <button (click)=\"addComment(post._id, in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">comment</button>\n                                        </form>\n                                    </div>\n                                </div>   \n    \n                    </div>\n\n                </div>\n\n\n            </div>\n\n    </section>"
 
 /***/ }),
 
@@ -830,35 +936,60 @@ var ProfileComponent = /** @class */ (function () {
         this.rate = 0.0;
         this.posts = [];
     }
+    ProfileComponent.prototype.updateSuggestions = function () {
+        this.suggestedFriends = this.appService.suggestedFriends;
+    };
+    ProfileComponent.prototype.updateView = function (id) {
+        var _this = this;
+        this.appService.getProfile(id).subscribe(function (response) {
+            _this.section = 'activity';
+            _this.followers = response.followers;
+            _this.following = response.following;
+            _this.name = response.name;
+            _this.id = _this.appService.id;
+            var i = 0;
+            _this.posts = response.posts;
+            _this.rate = response.posts.reduce(function (aggr, cur) {
+                return aggr + cur.rates.reduce(function (aggr, cur) {
+                    i++;
+                    return aggr + cur.value;
+                }, 0);
+            }, 0) / i;
+        });
+    };
     ProfileComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.updateSuggestions();
+        this.appService.suggestedFriendsSubject.subscribe(function () {
+            _this.updateSuggestions();
+        });
         this.profileSubscription = this.route.queryParams.subscribe(function (params) {
-            _this.appService.getProfile(params["id"]).subscribe(function (response) {
-                _this.section = 'activity';
-                debugger;
-                _this.followers = response.followers;
-                _this.following = response.following;
-                _this.name = response.name;
-                _this.id = _this.appService.id;
-                var i = 0;
-                _this.posts = response.posts;
-                _this.rate = response.posts.reduce(function (aggr, cur) {
-                    return aggr + cur.rates.reduce(function (aggr, cur) {
-                        i++;
-                        return aggr + cur.value;
-                    }, 0);
-                }, 0) / i;
-            });
+            _this.updateView(params["id"]);
         });
     };
     ProfileComponent.prototype.removePost = function (id) {
-        console.log(id);
+        var _this = this;
+        this.appService.removePost(id).subscribe(function () { return _this.updateView(_this.id); });
     };
     ProfileComponent.prototype.sharePost = function (id) {
-        console.log(id);
+        var _this = this;
+        this.appService.sharePost(id).subscribe(function () { return _this.updateView(_this.id); });
+    };
+    ProfileComponent.prototype.addComment = function (id, body) {
+        var _this = this;
+        this.appService.addComment(id, body).subscribe(function () { return _this.updateView(_this.id); });
+    };
+    ProfileComponent.prototype.addPost = function (body) {
+        var _this = this;
+        this.appService.addPost(body).subscribe(function () { return _this.updateView(_this.id); });
     };
     ProfileComponent.prototype.removeComment = function (id) {
-        console.log(id);
+        var _this = this;
+        this.appService.removeComment(id).subscribe(function () { return _this.updateView(_this.id); });
+    };
+    ProfileComponent.prototype.follow = function (id) {
+        var _this = this;
+        this.appService.follow(id).subscribe(function () { return _this.updateSuggestions(); });
     };
     ProfileComponent.prototype.compare = function (id) {
         if (id == this.id) {

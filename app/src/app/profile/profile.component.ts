@@ -10,6 +10,7 @@ import { AppService } from '../app.service'
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+  suggestedFriends;
   
   id = '';
   followers = [];
@@ -23,13 +24,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private appService: AppService) { }
 
-  ngOnInit() {
-  	this. profileSubscription = this.route.queryParams.subscribe(params=>{
-  		this.appService.getProfile(params["id"]).subscribe((response)=>{
+  updateSuggestions() {
+    this.suggestedFriends = this.appService.suggestedFriends;
+  }
+
+  updateView(id){
+    this.appService.getProfile(id).subscribe((response)=>{
         this.section = 'activity';
-        debugger;
         this.followers = response.followers;
-  			this.following = response.following;
+        this.following = response.following;
         this.name = response.name;
         this.id = this.appService.id;
         let i = 0;
@@ -40,20 +43,41 @@ export class ProfileComponent implements OnInit, OnDestroy {
             return aggr + cur.value;
           },0)
         },0) / i;
-  		})
-  	})
+      })
+  }
+
+  ngOnInit() {
+    this.updateSuggestions();
+    this.appService.suggestedFriendsSubject.subscribe(()=>{
+      this.updateSuggestions();
+    });
+  	this. profileSubscription = this.route.queryParams.subscribe(params=>{
+      this.updateView(params["id"]);
+    })
   }
 
   removePost(id) {
-    console.log(id);
+    this.appService.removePost(id).subscribe(()=>this.updateView(this.id));
   }
 
   sharePost(id) {
-    console.log(id);
+    this.appService.sharePost(id).subscribe(()=>this.updateView(this.id));
+  }
+
+  addComment(id, body) {
+    this.appService.addComment(id, body).subscribe(()=>this.updateView(this.id));
+  }
+
+  addPost(body) {
+    this.appService.addPost(body).subscribe(()=>this.updateView(this.id));
   }
 
   removeComment(id) {
-    console.log(id);
+    this.appService.removeComment(id).subscribe(()=>this.updateView(this.id));
+  }
+
+  follow(id) {
+    this.appService.follow(id).subscribe(()=>this.updateSuggestions());
   }
 
   compare(id) {

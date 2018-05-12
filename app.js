@@ -75,7 +75,16 @@ let authenticate = ((req, res, next)=>{
 
 app.get('/api/profile', authenticate, function (req, res) {
   req.user.getProfile(req.query.id).then((r)=>{
-    debugger;
+    res.json(r);
+  }).catch((r)=>{
+    res.json({
+      errorMessage: "can't find profile"
+    })
+  })
+})
+
+app.get('/api/home', authenticate, function (req, res) {
+  req.user.getHome().then((r)=>{
     res.json(r);
   }).catch((r)=>{
     res.json({

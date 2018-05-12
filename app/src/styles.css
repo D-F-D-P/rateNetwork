@@ -49,12 +49,12 @@ body {
   position: relative; }
 
 .notification {
-  position: absolute;
+  position: fixed;
   bottom: 2rem;
   left: 1.5rem;
   width: 24rem;
   height: 7rem;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
@@ -99,7 +99,6 @@ body {
 
 p {
   font-size: 1.4rem;
-  align-self: flex-end;
   margin-right: 5rem; }
   p a {
     text-decoration: none;
@@ -127,6 +126,11 @@ a.log {
 .comment-name {
   color: #4e4450;
   font-size: 1.5rem;
+  font-weight: 700; }
+
+.shared {
+  color: #746566a8;
+  font-size: 1.2rem;
   font-weight: 700; }
 
 .u-center-text {
@@ -206,13 +210,13 @@ a.log {
   cursor: pointer; }
 
 .btn-remove {
-  background-color: rgba(211, 139, 175, 0.2);
+  background-color: transparent;
   color: #746566a8;
   border: none;
   align-self: flex-start;
   padding: .4rem;
   height: 2.5rem;
-  font-weight: 400;
+  font-weight: 600;
   cursor: pointer;
   border-radius: 2px; }
 
@@ -376,6 +380,35 @@ a.log {
   .search__icon {
     width: 1.5rem; }
 
+.popup {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s; }
+  @supports (-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
+    .popup {
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.3); } }
+  .popup__content {
+    width: 40rem;
+    height: 60rem;
+    display: block;
+    margin: 2rem auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    overflow-y: auto; }
+    .popup__content .commenters {
+      display: flex;
+      flex-direction: column;
+      width: 60%;
+      margin-left: 7rem; }
+
 /*Basic Grid Styles*/
 .Grid {
   display: flex;
@@ -519,7 +552,7 @@ a.log {
     .header .user__shape {
       width: 12rem;
       height: 12rem;
-      background-color: transparent;
+      background-color: #d38baf;
       overflow: hidden;
       border-radius: 50%;
       border: 2px solid #4e4450; }
@@ -569,46 +602,6 @@ a.log {
       display: flex;
       flex-direction: column;
       height: 15rem; }
-      .content__aside .s-connections .person {
-        width: 100%;
-        height: 6rem;
-        margin-bottom: 1rem;
-        display: flex;
-        justify-content: space-between; }
-        .content__aside .s-connections .person__wraper {
-          display: flex;
-          flex-direction: row; }
-        .content__aside .s-connections .person__shape {
-          width: 4rem;
-          height: 4rem;
-          background-color: transparent;
-          overflow: hidden;
-          border-radius: 50%;
-          border: 1px solid #746566a8;
-          align-self: center; }
-          @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
-            .content__aside .s-connections .person__shape {
-              -webkit-clip-path: circle(50% at 50% 50%);
-              clip-path: circle(50% at 50% 50%);
-              -webkit-shape-outside: circle(50% at 50% 50%);
-              shape-outside: circle(50% at 50% 50%);
-              border-radius: none; } }
-        .content__aside .s-connections .person__img {
-          width: 100%;
-          transform: scale(1.1);
-          backface-visibility: hidden;
-          transition: all .5s; }
-        .content__aside .s-connections .person__caption {
-          display: flex;
-          flex-direction: column;
-          margin-left: .2rem;
-          align-self: center; }
-        .content__aside .s-connections .person__name {
-          color: #746566a8;
-          font-size: 1.5rem; }
-        .content__aside .s-connections .person__rate {
-          color: #746566a8;
-          font-size: 1.5rem; }
     .content__aside .activity-log {
       margin-top: 2rem;
       height: 20rem;
@@ -670,7 +663,7 @@ a.log {
       .content__area .posts__post {
         display: flex;
         flex-direction: column;
-        width: 80%;
+        width: 70rem;
         margin-top: 4rem; }
         .content__area .posts__post-head {
           display: flex;
@@ -679,7 +672,7 @@ a.log {
           .content__area .posts__post-head .post-head__shape {
             width: 4rem;
             height: 4rem;
-            background-color: transparent;
+            background-color: #d38baf;
             overflow: hidden;
             border-radius: 50%;
             border: 1px solid #746566a8;
@@ -703,12 +696,15 @@ a.log {
           .content__area .posts__post-head .post-head__name {
             color: #4e4450;
             font-size: 2rem; }
+          .content__area .posts__post-head .post-head__date {
+            color: #746566a8;
+            font-size: 1.2rem;
+            font-weight: 600; }
         .content__area .posts__post-body {
           padding: 0 4rem;
-          align-self: center;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid rgba(78, 68, 80, 0.2); }
+          padding-bottom: 1rem; }
         .content__area .posts__post-comments {
+          border-top: 1px solid rgba(78, 68, 80, 0.2);
           margin-left: 2rem;
           margin-top: 1rem; }
           .content__area .posts__post-comments .post__comment {
@@ -747,7 +743,7 @@ a.log {
       .content .connections .connection__shape {
         width: 4rem;
         height: 4rem;
-        background-color: transparent;
+        background-color: #d38baf;
         overflow: hidden;
         border-radius: 50%;
         border: 1px solid #746566a8;
@@ -776,6 +772,71 @@ a.log {
         color: #746566a8;
         font-size: 1.5rem; }
 
+.remove-icon {
+  width: 2rem; }
+
+.share-icon {
+  width: 15px;
+  /*margin-right: .3rem;*/
+   }
+
+.wraper {
+  display: flex;
+  flex-direction: column;
+  min-width: 7rem; }
+
+.date {
+  color: #746566a8;
+  font-size: 1.2rem;
+  font-weight: 600; }
+
+.post-shared {
+  display: flex;
+  flex-direction: row; }
+
+.person {
+  width: 100%;
+  height: 6rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between; }
+  .person__wraper {
+    display: flex;
+    flex-direction: row; }
+  .person__shape {
+    width: 4rem;
+    height: 4rem;
+    background-color: #d38baf;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #746566a8;
+    align-self: center;
+    display: flex;
+    align-items: center; }
+    @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
+      .person__shape {
+        -webkit-clip-path: circle(50% at 50% 50%);
+        clip-path: circle(50% at 50% 50%);
+        -webkit-shape-outside: circle(50% at 50% 50%);
+        shape-outside: circle(50% at 50% 50%);
+        border-radius: none; } }
+  .person__img {
+    width: 100%;
+    transform: scale(1.1);
+    backface-visibility: hidden;
+    transition: all .5s; }
+  .person__caption {
+    display: flex;
+    flex-direction: column;
+    margin-left: .2rem;
+    align-self: center; }
+  .person__name {
+    color: #746566a8;
+    font-size: 1.5rem; }
+  .person__rate {
+    color: #746566a8;
+    font-size: 1.5rem; }
+
 .section-signup {
   display: flex;
   flex-direction: column;
@@ -803,3 +864,5 @@ a.log {
 .link {
   cursor: pointer;
 }
+
+@import '~css-star-rating/scss/star-rating';

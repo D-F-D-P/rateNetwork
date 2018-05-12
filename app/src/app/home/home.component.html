@@ -11,33 +11,18 @@
                 <div class="suggested-connections">
                     <h2 class="heading-primary--aside">suggested connections</h2>
                     <div class="s-connections">
-                        <div class="person">
+                        <div class="person" *ngFor="let one of suggestedFriends">
                             <a href="#" class="person__wraper">
 
                                 <figure class="person__shape">
                                     <img src="assets/img/lorde.jpg" alt="Person on a tour" class="person__img">
                                 </figure>
                                 <div class="person__caption">
-                                    <div class="person__name">Lorde</div>
-                                    <div class="person__rate">4.3</div>
+                                    <a [routerLink]="['/profile']" [queryParams]="{'id':one._id}" class="person__name">{{one.name}}</a>
 
                                 </div>
                             </a>
-                            <button class="btn-follow">follow</button>
-
-                        </div>
-                        <div class="person">
-                            <a href="#" class="person__wraper">
-                                <figure class="person__shape">
-                                    <img src="assets/img/childish gambino.jpg" alt="Person on a tour" class="person__img">
-                                </figure>
-                                <div class="person__caption">
-                                    <div class="person__name">Childish Gambino</div>
-                                    <div class="person__rate">4.1</div>
-
-                                </div>
-                            </a>
-                            <button class="btn-follow">follow</button>
+                            <button (click)="follow(one._id)" class="btn-follow">follow</button>
 
                         </div>
                     </div>
@@ -66,7 +51,7 @@
                         </div>
                     </div>
                 <div class="links">
-                    <a href="#" class="link">profile</a>
+                    <a routerLink="/profile" class="link">profile</a>
                     <a href="#" class="link">logout</a>
                 </div>
             </div>
@@ -76,51 +61,64 @@
 
 
                 <div class="posts">
-                    <div class="posts__add-post">
-                        <form action="" class="posts__add">
-                            <input type="text" class="posts__add__input" placeholder="whats on tour mind...">
-                            <button type="submit" class="btn-post">Post</button>
-                        </form>
-                    </div>
-
-
-                    <div class="posts__post">
-                        <a href="#">
-                            <div class="posts__post-head">
-                                <figure class="post-head__shape">
-                                    <img src="assets/img/childish gambino.jpg" alt="Person on a tour" class="post-head__img">
-                                </figure>
-                                <div class="post-head__caption">
-                                    <div class="post-head__name">Childish Gambino</div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <div class="posts__post-body">
-                            <p>
-                                We just wanna party Party just for you We just want the money Money just for you I know you wanna party Party just for me
-                            </p>
-                        </div>
-                        <div class="posts__post-rate"></div>
-                        <div class="posts__post-comments">
-
-                            <h2 class="comments-head">Comments</h2>
-                            <div class="post__comment">
-                                <a href="#" class="comment-name">Lorde</a>
-                                <p class="comment-body">get some money , black man Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque,
-                                    nostrum consequatur. Et a eum quibusdam, dignissimos possimus culpa non consequatur,
-                                    quod voluptatibus facere ipsam deserunt. Cumque officia maiores omnis deleniti.</p>
-                            </div>
-                            <form action="" class="comments__add">
-                                <input type="text" class="comments__add__input" placeholder="write something">
-                                <button type="submit" class="btn-post">comment</button>
+                        <div class="posts__add-post">
+                            <form action="" class="posts__add">
+                                <input type="text" class="posts__add__input" placeholder="whats on tour mind..." #in>
+                                <button (click)="addPost(in.value);in.value = '';" type="submit" class="btn-post">Post</button>
                             </form>
                         </div>
+
+
+                        <div class="posts__post" *ngFor="let post of posts;let i of index">
+                                    <div class="post-shared" *ngIf="post.shared">
+                                        <!-- <img src="/assets/img/share-symbol.svg" class="share-icon" > -->
+                                        <span class="shared"> > from <a [routerLink]="['/profile']" [queryParams]="{'id':post.results.user_id}" class="log">{{post.results.name}}</a></span>
+                                    </div>
+                                        <div class="posts__post-head">
+                                    <a href="#">
+                                            <figure class="post-head__shape">
+                                                <!-- <img src="img/childish gambino.jpg" alt="Person on a tour" class="post-head__img"> -->
+                                            </figure>
+                                            <div class="post-head__caption">
+                                                <a [routerLink]="['/profile']" [queryParams]="{'id':post.user_id}" class="post-head__name">{{post.name}}</a>
+                                                <span class="date">{{post.date | date}}</span>
+                                            </div>
+                                        </a>
+                                        <button *ngIf="compare(post.user_id)" (click)="removePost(post._id)" class="btn-remove"><img  class="remove-icon" src="/assets/img/delete-button.svg" ></button>
+                                        
+                                    </div>
+            
+                                    <div class="posts__post-body">
+                                        <p>
+                                            {{post.body}}
+                                        </p>
+                                    </div>
+                                    <div class="posts__post-options">
+                                        <div class="post-rate"></div>
+                                        <button (click)="sharePost(post._id)" class="btn-remove">share </button>
+                                        
+                                    </div>
+                                    <div class="posts__post-comments">
+            
+                                        <div class="comments-head">Comments</div>
+                                        <div class="post__comment" *ngFor="let comment of post.comments">
+                                           <div class="wraper">
+                                               <a [routerLink]="['/profile']" [queryParams]="{'id':comment.user_id}" class="comment-name">{{comment.name}}</a>
+                                               <span class="date">{{comment.date | date}}</span>
+                                           </div>
+                                            
+                                            <p class="comment-body">{{comment.body}}</p>
+                                        <button *ngIf="compare(comment.user_id)" (click)="removeComment(comment._id)" class="btn-remove"><img  class="remove-icon" src="/assets/img/delete-button.svg" ></button>
+                                               
+                                        </div>
+                                        <form action="" class="comments__add">
+                                            <input type="text" class="comments__add__input" placeholder="write something" #in>
+                                            <button (click)="addComment(post._id, in.value);in.value = ''" type="submit" class="btn-post">comment</button>
+                                        </form>
+                                    </div>
+                                </div>   
+    
                     </div>
-                    
-
-
-                </div>
 
 
             </div>

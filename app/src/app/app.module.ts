@@ -19,6 +19,8 @@ import { NavComponent } from './content/nav/nav.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 
+
+
 const appRoutes:Routes =[
   {path:'' , component:HomeComponent},
   {path:'profile' , component:ProfileComponent},

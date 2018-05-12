@@ -54,6 +54,15 @@ schema.methods.getProfile = async function(id) {
 	}
 }
 
+schema.methods.getHome = async function(id) {
+	let currentUser = this;
+	return {
+		_id: currentUser._id,
+		name: currentUser.name,
+		posts: await Post.getPosts(currentUser._id, false)
+	}
+}
+
 schema.statics.getActiveFollwers = function (id) {
 	let User = this;
 	id = mongoose.Types.ObjectId(id);
