@@ -1,0 +1,32 @@
+<section class="section-signup">
+        <div class="bg-video">
+            <video class="bg-video__content" autoplay muted loop>
+                <source src="assets/img/Triple_Date.webm" type="video/mp4">
+                <source src="assets/img/Triple_Date.mp4" type="video/mp4">
+            </video>
+        </div>
+      
+        <form class="form" (ngSubmit)="submit(f)" #f="ngForm">
+            <h3 class="u-margin-bottom-small heading-primary--sub u-center-text">Welcome back</h3>
+            <div class="form__group">
+                <input type="text" class="form__input" placeholder="username" id="f-name" required autocomplete="false"
+                required
+                ngModel
+                name="username">
+                <label for="f-name" class="form__label">username</label>
+    
+            </div>
+          
+            <div class="form__group">
+                <input type="password" class="form__input" placeholder="password" id="password" required autocomplete="false"
+                required
+                ngModel
+                name="password">
+                <label for="password" class="form__label">password</label>
+            </div>
+          
+            <button type="submit" class="btn btn--submit"
+             [disabled]="!f.valid">Login</button>
+            <!-- <p><a href="">creat new account</a></p> -->
+        </form>
+    </section>

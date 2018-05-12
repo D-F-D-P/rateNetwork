@@ -166,7 +166,8 @@ schema.statics.getPosts = function(id, profile)
 							type:1,
 							name:1,
 							date:1,
-							body:1
+							body:1,
+							value:1
 						}
 					}
 		       ],

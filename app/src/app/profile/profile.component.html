@@ -1,0 +1,189 @@
+<section class="section-profile">
+        <div class="header">
+
+            <a href="#" class="user">
+                <figure class="user__shape">
+                    <img src="assets/img/lana.jpg" alt="Person on a tour" class="user__img">
+                </figure>
+                <div class="user__caption">
+                    <div class="user__name">{{name}}</div>
+                    <div class="user__rate">{{rate || '0.0'}}</div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="content">
+                <div class="content__aside">
+                        <div class="search">
+                                <input type="text" class="search__input" placeholder="Search">
+                                <button class="search__button">
+                                    <img src="assets/img/search.svg" alt="" class="search__icon">
+                                </button>
+                            </div>
+                    <div class="suggested-connections">
+                        <h2 class="heading-primary--aside">suggested connections</h2>
+                        <div class="s-connections">
+                            <div class="person">
+                                <a href="#" class="person__wraper">
+    
+                                    <figure class="person__shape">
+                                        <img src="assets/img/lorde.jpg" alt="Person on a tour" class="person__img">
+                                    </figure>
+                                    <div class="person__caption">
+                                        <div class="person__name">Lorde</div>
+    
+                                    </div>
+                                </a>
+                                <button class="btn-follow">follow</button>
+    
+                            </div>
+                            <div class="person">
+                                <a href="#" class="person__wraper">
+                                    <figure class="person__shape">
+                                        <img src="assets/img/childish gambino.jpg" alt="Person on a tour" class="person__img">
+                                    </figure>
+                                    <div class="person__caption">
+                                        <div class="person__name">Childish Gambino</div>
+    
+                                    </div>
+                                </a>
+                                <button class="btn-follow">follow</button>
+    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activity-log">
+                        <h2 class="heading-primary--aside">activity log</h2>
+                        <div class="activity-log__logs">
+                            <div class="activity-log__event">
+                                <a href="#" class="log"><strong>Nader Yasser</strong></a> rated your post
+                            </div>
+                            <div class="activity-log__event">
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> rated your post
+                            </div>
+                            <div class="activity-log__event">
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> followed
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a>
+                            </div>
+                            <div class="activity-log__event">
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> followed
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a>
+                            </div>
+                            <div class="activity-log__event">
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a> rated
+                                    <a href="#" class="log"><strong>Nader Yasser</strong></a>'s post
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="links">
+                        <a routerLink="/home" class="link">home</a>
+                        <a  class="link">logout</a>
+                    </div>
+                </div>
+
+            <div class="content__area">
+                <div class="navigation">
+                    <ul class="navigation__nav">
+                        <li>
+                            <a (click)="this.section = 'activity'" [ngClass]="{'active': this.section == 'activity'}" class="link">activity</a>
+                        </li>
+                        <li>
+                            <a (click)="this.section = 'followers'" [ngClass]="{'active': this.section == 'followers'}" class="link">followers ({{followers.length}})</a>
+                        </li>
+                        <li>
+                            <a (click)="this.section = 'following'" [ngClass]="{'active': this.section == 'following'}" class="link">following ({{following.length}})</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="connections" *ngIf="this.section == 'followers'">
+                   <div class="connection" *ngFor="let follower of followers">
+                    <a [routerLink]="['/profile']" [queryParams]="{'id':follower._id}" class="connection__wraper">
+
+                        <figure class="connection__shape">
+                            <img src="assets/img/lorde.jpg" alt="Person on a tour" class="connection__img">
+                        </figure>
+                        <div class="connection__caption">
+                            <div class="connection__name">{{follower.name}}</div>
+                        </div>
+                    </a>
+                    <a class="btn-follow" [routerLink]="['/profile']" [queryParams]="{'id':follower._id}">view profile</a>
+                    
+                   </div>
+                </div>
+
+                <div class="connections" *ngIf="this.section == 'following'">
+                   <div class="connection" *ngFor="let follower of following">
+                    <a [routerLink]="['/profile']" [queryParams]="{'id':follower._id}" class="connection__wraper">
+
+                        <figure class="connection__shape">
+                            <img src="assets/img/lorde.jpg" alt="Person on a tour" class="connection__img">
+                        </figure>
+                        <div class="connection__caption">
+                            <div class="connection__name">{{follower.name}}</div>
+                        </div>
+                    </a>
+                    <a class="btn-follow" [routerLink]="['/profile']" [queryParams]="{'id':follower._id}">view profile</a>
+                    
+                   </div>
+                </div>
+
+                <div class="posts" *ngIf="this.section == 'activity'">
+                        <div class="posts__add-post">
+                            <form action="" class="posts__add">
+                                <input type="text" class="posts__add__input" placeholder="whats on tour mind...">
+                                <button type="submit" class="btn-post">Post</button>
+                            </form>
+                        </div>
+    
+    
+                        <div class="posts__post" *ngFor="let post of posts">
+                                <div class="posts__post-head">
+                            <a href="#">
+                                    <figure class="post-head__shape">
+                                        <img src="/assets/img/childish gambino.jpg" alt="Person on a tour" class="post-head__img">
+                                    </figure>
+                                    <div class="post-head__caption">
+                                        <a [routerLink]="['/profile']" [queryParams]="{'id':post.user_id}" class="post-head__name"> {{post.name}} -- <a *ngIf="post.shared" [routerLink]="['/profile']" [queryParams]="{'id':post.results.user_id}"> shared from {{post.results.name}}</a></a>
+                                        <a class="post-head__name"> {{post.date | date}}</a>
+                                    </div>
+                                </a>
+                                <button *ngIf="compare(post.user_id)" (click)="removePost(post._id)" class="btn-remove">remove</button>
+                                
+                            </div>
+    
+                            <div class="posts__post-body">
+                                <p>{{post.body}}</p>
+                            </div>
+                            <div class="posts__post-options">
+                                <div class="post-rate"></div>
+                                <button class="btn-remove" (click)="sharePost(post.shared ? post.results._id : post._id)">share    </button>
+                                
+                            </div>
+                            <div class="posts__post-comments">
+    
+                                <h2 class="comments-head">Comments</h2>
+                                <div class="post__comment" *ngFor="let comment of post.comments">
+                                    <a [routerLink]="['/profile']" [queryParams]="{'id':comment.user_id}" class="comment-name">{{comment.name}} -- </a>
+                                    <a class="comment-name"> {{comment.date | date}}</a>
+                                    <p class="comment-body">{{comment.body}}</p>
+                                    <a *ngIf="compare(comment.user_id)" (click)="removeComment(comment._id)" class="btn-remove">remove</a>
+                                </div>
+                                <form action="" class="comments__add">
+                                    <input type="text" class="comments__add__input" placeholder="write something">
+                                    <button type="submit" class="btn-post">comment</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+    
+                    </div>
+
+                </div>
+
+
+            </div>
+
+    </section>

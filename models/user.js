@@ -45,6 +45,7 @@ schema.methods.getProfile = async function(id) {
 	}
 	if (id == currentUser._id)id = null;
 	return {
+		_id: id || currentUser._id,
 		name: id ? await User.findOne({_id: id}).then(r=>r.name) : currentUser.name,
 		status: await getStatus(currentUser._id, id),
 		followers: await User.followers_list(id || currentUser._id),
@@ -102,7 +103,7 @@ schema.statics.login = async function (user_name, password) {
 	let userResult = await User.findOne({ name: user_name }).exec();
 	if (userResult === null) throw new Error("invalid email or password");
 	if (bcrypt.compareSync(password, userResult.password)) {
-	  return await userResult.generateAuthToken();
+	  return {token : await userResult.generateAuthToken(), _id: userResult._id};
 	}
 	throw new Error("invalid email or password");
 }

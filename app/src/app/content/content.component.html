@@ -1,0 +1,27 @@
+<app-aside class="content__aside"></app-aside>
+
+
+    <div class="content__area">
+                <div class="navigation">
+                    <ul class="navigation__nav">
+                        <li routerLinkActive="active" [routerLinkActiveOptions] = "{exact:true}">
+                            <a routerLink="/" class="link">activity</a>
+                        </li>
+                        <li routerLinkActive="active">
+                            <a routerLink="/connections" class="link">followers</a>
+                        </li>
+                        <li routerLinkActive="active">
+                            <a routerLink="/connections" class="link">following</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+            <router-outlet></router-outlet>
+
+
+                </div>
+
+
+            

@@ -55,11 +55,9 @@ app.use(function(req, res, next) {
   });
 
 
-app.post('/login', function (req, res) {
+app.post('/api/login', function (req, res) {
   User.login(req.body.user_name, req.body.password).then((r)=>{
-    res.json({
-      token: r
-    })
+    res.json(r)
   }).catch((r)=>{
     res.json({
       errorMessage: "invalid user_name or password"
@@ -67,7 +65,7 @@ app.post('/login', function (req, res) {
   })
 })
 
-app.use((req, res, next)=>{
+let authenticate = ((req, res, next)=>{
   let token = req.body.token || req.query.token || req.headers['x-access-token'];
   User.verifyAuthToken(token).then((r)=>{
     req.user = r;
@@ -75,9 +73,10 @@ app.use((req, res, next)=>{
   })
 })
 
-app.get('/profile', function (req, res) {
+app.get('/api/profile', authenticate, function (req, res) {
   req.user.getProfile(req.query.id).then((r)=>{
-    res.json(r)
+    debugger;
+    res.json(r);
   }).catch((r)=>{
     res.json({
       errorMessage: "can't find profile"
@@ -85,7 +84,7 @@ app.get('/profile', function (req, res) {
   })
 })
 
-app.get('/suggestedFriends', function (req, res) {
+app.get('/api/suggestedFriends', authenticate, function (req, res) {
   User.suggested_friends(req.user._id).then((r)=>{
     res.json(r)
   }).catch((r)=>{
@@ -95,7 +94,7 @@ app.get('/suggestedFriends', function (req, res) {
   })
 })
 
-app.post('/follow', function (req, res) {
+app.post('/api/follow', authenticate, function (req, res) {
   if (req.body.id) {
       User.follow(req.user._id.toString(), req.body.id).then((r)=>{
         res.json({success: true});
@@ -118,7 +117,7 @@ app.post('/follow', function (req, res) {
   }
 })
 
-app.post('/unfollow', function (req, res) {
+app.post('/api/unfollow', authenticate, function (req, res) {
   if (req.body.id) {
     User.unfollow(req.user._id.toString(), req.body.id).then((r)=>{
         res.json({success: true});
@@ -130,7 +129,7 @@ app.post('/unfollow', function (req, res) {
   }
 })
 
-app.post('/post/add', function (req, res) {
+app.post('/api/post/add', authenticate, function (req, res) {
   if (req.body.body) {
     let post = new Post;
     post.body = req.body.body;
@@ -148,7 +147,7 @@ app.post('/post/add', function (req, res) {
   }
 })
 
-app.post('/post/remove', function (req, res) {
+app.post('/api/post/remove', authenticate, function (req, res) {
   if (req.body.id) {
     Post.remove({_id: req.body.id, user_id: req.user._id}).then(()=>{
       res.json({success: true});
@@ -156,7 +155,7 @@ app.post('/post/remove', function (req, res) {
   }
 })
 
-app.post('/post/share', function (req, res) {
+app.post('/api/post/share', authenticate, function (req, res) {
   if (req.body.id) {
     let post = new Post;
     post.user_id = req.user._id;
@@ -210,7 +209,7 @@ app.post('/post/share', function (req, res) {
   }
 })
 
-app.post('/post/comment', function (req, res) {
+app.post('/api/post/comment', authenticate, function (req, res) {
   if (req.body.id && req.body.body) {
     Activity.comment(req.user._id, req.body.id, req.body.body).then(()=>{
       res.json({success: true});
@@ -260,7 +259,7 @@ app.post('/post/comment', function (req, res) {
   }
 })
 
-app.post('/post/rate', function (req, res) {
+app.post('/api/post/rate', authenticate, function (req, res) {
   if (req.body.id && req.body.rate) {
     Activity.rate(req.user._id, req.body.id, req.body.rate).then(()=>{
       res.json({success: true});
@@ -309,7 +308,7 @@ app.post('/post/rate', function (req, res) {
   }
 })
 
-app.post('/post/unrate', function (req, res) {
+app.post('/api/post/unrate', authenticate, function (req, res) {
   if (req.body.id) {
     Activity.rate(req.user._id, req.body.id).then(()=>{
       res.json({success: true});
@@ -317,13 +316,19 @@ app.post('/post/unrate', function (req, res) {
   }
 })
 
-app.post('/post/comment/remove', function (req, res) {
+app.post('/api/post/comment/remove', authenticate, function (req, res) {
   if (req.body.id) {
     Activity.remove({_id: req.body.id, user_id: req.user._id}).then(()=>{
       res.json({success: true});
     });
   }
 })
+
+// frontend Router
+app.use('/*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 
 // port for the server
 const port = process.env.PORT || 3000;
