@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/playground');
 mongoose.Promise = global.Promise;
 const { User } = require('./models/user');
@@ -25,7 +25,7 @@ io.on('connection', function(socket) {
     sockets[user._id] = socket.id;
     console.log(sockets);
     User.getActiveFollwers(user._id).then((ids)=>{
-      notify([ids], user.name + " is active now !", 'log');
+      notify(ids, user.name + " is active now !", 'log');
     });
     socket.on('disconnect', function(data) {
       delete sockets[user._id];
@@ -59,7 +59,7 @@ app.post('/api/login', function (req, res) {
   User.login(req.body.user_name, req.body.password).then((r)=>{
     res.json(r)
   }).catch((r)=>{
-    res.json({
+    res.status(500).json({
       errorMessage: "invalid user_name or password"
     })
   })
@@ -77,7 +77,7 @@ app.get('/api/profile', authenticate, function (req, res) {
   req.user.getProfile(req.query.id).then((r)=>{
     res.json(r);
   }).catch((r)=>{
-    res.json({
+    res.status(500).json({
       errorMessage: "can't find profile"
     })
   })
@@ -87,7 +87,7 @@ app.get('/api/home', authenticate, function (req, res) {
   req.user.getHome().then((r)=>{
     res.json(r);
   }).catch((r)=>{
-    res.json({
+    res.status(500).json({
       errorMessage: "can't find profile"
     })
   })
@@ -97,7 +97,7 @@ app.get('/api/suggestedFriends', authenticate, function (req, res) {
   User.suggested_friends(req.user._id).then((r)=>{
     res.json(r)
   }).catch((r)=>{
-    res.json({
+    res.status(500).json({
       errorMessage: "can't find suggestedFriends"
     })
   })
@@ -110,16 +110,16 @@ app.post('/api/follow', authenticate, function (req, res) {
         User.findOne({_id: req.body.id}).then((r)=>{
           User.getActiveFollwers(req.user._id).then((ids)=>{
             ids = ids.filter(id=>id.toString()!=r._id.toString());
-            notify([ids], req.user.name + " has followed " + r.name + " !", 'log');
+            notify(ids, req.user.name + " has followed " + r.name + " !", 'log');
           });
           User.getActiveFollwers(r._id.toString()).then((ids)=>{
             ids = ids.filter(id=>id.toString()!=r._id.toString());
-            notify([ids], req.user.name + " has followed " + r.name + " !", 'log');
+            notify(ids, req.user.name + " has followed " + r.name + " !", 'log');
           });
         })
         notify([r._id.toString()], req.user.name + " has followed you !", 'notification');
     }).catch((r)=>{
-      res.json({
+      res.status(500).json({
         errorMessage: "can't follow"
       })
     })
@@ -131,7 +131,7 @@ app.post('/api/unfollow', authenticate, function (req, res) {
     User.unfollow(req.user._id.toString(), req.body.id).then((r)=>{
         res.json({success: true});
     }).catch((r)=>{
-      res.json({
+      res.status(500).json({
         errorMessage: "can't unfollow"
       })
     })
@@ -150,7 +150,7 @@ app.post('/api/post/add', authenticate, function (req, res) {
       debugger;
       User.getActiveFollwers(req.user._id).then((ids)=>{
           debugger;
-          notify([ids], req.user.name + " has added new post !", 'log');
+          notify(ids, req.user.name + " has added new post !", 'log');
         });
     });
   }
@@ -206,11 +206,11 @@ app.post('/api/post/share', authenticate, function (req, res) {
         r = r && r[0];
         User.getActiveFollwers(req.user._id).then((ids)=>{
           ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify([ids], req.user.name + " has shared " + r.name + "'s post !", 'log');
+          notify(ids, req.user.name + " has shared " + r.name + "'s post !", 'log');
         });
         User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
           ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify([ids], req.user.name + " has shared " + r.name + "'s post !", 'log');
+          notify(ids, req.user.name + " has shared " + r.name + "'s post !", 'log');
         });
         notify([r.user_id.toString()], req.user.name + " has shared your post !", 'notification');
       })
@@ -256,11 +256,11 @@ app.post('/api/post/comment', authenticate, function (req, res) {
         r = r && r[0];
         User.getActiveFollwers(req.user._id).then((ids)=>{
           ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify([ids], req.user.name + " has commented on " + r.name + "'s post !", 'log');
+          notify(ids, req.user.name + " has commented on " + r.name + "'s post !", 'log');
         });
         User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
           ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify([ids], req.user.name + " has commented on " + r.name + "'s post !", 'log');
+          notify(ids, req.user.name + " has commented on " + r.name + "'s post !", 'log');
         });
         notify([r.user_id.toString()], req.user.name + " has commented on your post !", 'notification');
       })
@@ -306,10 +306,10 @@ app.post('/api/post/rate', authenticate, function (req, res) {
         r = r && r[0];
         User.getActiveFollwers(req.user._id).then((ids)=>{
           ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify([ids], req.user.name + " has rated " + r.name + "'s post !", 'log');
+          notify(ids, req.user.name + " has rated " + r.name + "'s post !", 'log');
         });
         User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
-          notify([ids], req.user.name + " has rated " + r.name + "'s post !", 'log');
+          notify(ids, req.user.name + " has rated " + r.name + "'s post !", 'log');
         });
         notify([r.user_id.toString()], req.user.name + " has rated your post !", 'notification');
       })

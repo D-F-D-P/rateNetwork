@@ -2,16 +2,24 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Subject} from 'rxjs/Subject';
+import { SocketIoModule, Socket, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
+SocketIoModule.forRoot(config);
 
 @Injectable()
 export class AppService {
   token;
   id;
   suggestedFriendsSubject;
+  notificationsSubject;
   suggestedFriends;
+  socket;
+  activityLogSubject;
+  activityLog = [];
 
   constructor(private http: Http) {
-  
+
   }
 
 
@@ -23,13 +31,19 @@ export class AppService {
       this.token = localStorage.getItem('token');
      	this.id = localStorage.getItem('id');
   		if (this.token) {
-        // var socket = window.getIo()('http://localhost:3000?token=' + this.token);
-        // socket.on("activityLog", (m)=>{
-        //   console.log('[log] : ',m);
-        // });
-        // socket.on("notification", (m)=>{
-        //   console.log('[notification] : ',m);
-        // });
+        this.socket  = new Socket({ url: 'http://localhost:3000?token=' + this.token, options: {} });
+        this.activityLogSubject = new Subject();
+        this.notificationsSubject = new Subject();
+        this.socket.on("activityLog", (m)=>{
+          this.activityLog.push(m);
+          if (this.activityLog.length >= 5) {
+            this.activityLog = this.activityLog.slice(this.activityLog.length - 5, 5);
+          }
+          this.activityLogSubject.next();
+        });
+        this.socket.on("notification", (m)=>{
+          this.notificationsSubject.next(m);
+        });
         this.suggestedFriendsSubject = new Subject();
         this.getSuggestedFriends().subscribe((r)=>{
           this.suggestedFriends = r;
@@ -45,6 +59,24 @@ export class AppService {
     this.id = id;
     localStorage.setItem('token', token);
   	localStorage.setItem('id', id);
+    this.socket  = new Socket({ url: 'http://localhost:3000?token=' + this.token, options: {} });
+      this.activityLogSubject = new Subject();
+      this.notificationsSubject = new Subject();
+      this.socket.on("activityLog", (m)=>{
+        this.activityLog.push(m);
+        if (this.activityLog.length >= 5) {
+          this.activityLog = this.activityLog.slice(this.activityLog.length - 5, 5);
+        }
+        this.activityLogSubject.next();
+      });
+      this.socket.on("notification", (m)=>{
+        this.notificationsSubject.next(m);
+      });
+      this.suggestedFriendsSubject = new Subject();
+      this.getSuggestedFriends().subscribe((r)=>{
+        this.suggestedFriends = r;
+        this.suggestedFriendsSubject.next();
+      })
   }
 
   getProfile(id) {

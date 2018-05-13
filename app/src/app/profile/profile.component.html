@@ -2,9 +2,9 @@
         <div class="header">
 
             <a  class="user">
-                <figure class="user__shape">
-                    <figcaption class="caption-letter">{{name.slice(0,1)}}</figcaption>
-                </figure>
+                <div class="user__shape" [ngStyle]="{'backgroundColor': indexcolors[name.charCodeAt(0)% 128]}">
+                    <span class="caption-letter1">{{name.slice(0,1)}}</span>
+                </div>
                 <div class="user__caption">
                     <div class="user__name">{{name}}</div>
                     <div class="user__rate">{{rate || '0.0'}}</div>
@@ -33,9 +33,9 @@
                         <div class="person" *ngFor="let one of suggestedFriends">
                             <a  class="person__wraper">
 
-                                <figure class="person__shape">
-                                    <figcaption class="caption-letter">{{one.name.slice(0,1)}}</figcaption>
-                                </figure>
+                                <div class="person__shape" [ngStyle]="{'backgroundColor': indexcolors[one.name.charCodeAt(0)% 128]}">
+                                    <span class="caption-letter">{{one.name.slice(0,1)}}</span>
+                                </div>
                                 <div class="person__caption">
                                     <a [routerLink]="['/profile']" [queryParams]="{'id':one._id}" class="person__name">{{one.name}}</a>
 
@@ -49,30 +49,16 @@
                     <div class="activity-log">
                         <h2 class="heading-primary--aside">activity log</h2>
                         <div class="activity-log__logs">
-                            <div class="activity-log__event">
-                                <a  class="log"><strong>Nader Yasser</strong></a> rated your post
-                            </div>
-                            <div class="activity-log__event">
-                                    <a  class="log"><strong>Nader Yasser</strong></a> rated your post
-                            </div>
-                            <div class="activity-log__event">
-                                    <a  class="log"><strong>Nader Yasser</strong></a> followed
-                                    <a  class="log"><strong>Nader Yasser</strong></a>
-                            </div>
-                            <div class="activity-log__event">
-                                    <a  class="log"><strong>Nader Yasser</strong></a> followed
-                                    <a  class="log"><strong>Nader Yasser</strong></a>
-                            </div>
-                            <div class="activity-log__event">
-                                    <a  class="log"><strong>Nader Yasser</strong></a> rated
-                                    <a  class="log"><strong>Nader Yasser</strong></a>'s post
+                            <div class="activity-log__event" *ngFor="let msg of activityLog">
+                                <span  class="log">{{msg}}</span>
                             </div>
                         </div>
                     </div>
     
                     <div class="links">
+                        <a routerLink="/profile" class="link">profile</a>
                         <a routerLink="/home" class="link">home</a>
-                        <a  class="link">logout</a>
+                        <a (click)="logout()" class="link">logout</a>
                     </div>
                 </div>
 
@@ -95,9 +81,9 @@
                    <div class="connection" *ngFor="let follower of followers">
                     <a [routerLink]="['/profile']" [queryParams]="{'id':follower._id}" class="connection__wraper">
 
-                        <figure class="connection__shape">
-                    <figcaption class="caption-letter">{{follower.name.slice(0,1)}}</figcaption>                            
-                        </figure>
+                        <div class="connection__shape" [ngStyle]="{'backgroundColor': indexcolors[follower.name.charCodeAt(0)% 128]}">
+                    <span class="caption-letter">{{follower.name.slice(0,1)}}</span>                            
+                        </div>
                         <div class="connection__caption">
                             <div class="connection__name">{{follower.name}}</div>
                         </div>
@@ -111,10 +97,10 @@
                    <div class="connection" *ngFor="let follower of following">
                     <a [routerLink]="['/profile']" [queryParams]="{'id':follower._id}" class="connection__wraper">
 
-                        <figure class="connection__shape">
-                    <figcaption class="caption-letter">{{follower.name.slice(0,1)}}</figcaption>
+                        <div class="connection__shape" [ngStyle]="{'backgroundColor': indexcolors[follower.name.charCodeAt(0)% 128]}">
+                    <span class="caption-letter">{{follower.name.slice(0,1)}}</span>
 
-                        </figure>
+                        </div>
                         <div class="connection__caption">
                             <div class="connection__name">{{follower.name}}</div>
                         </div>
@@ -140,9 +126,9 @@
                                     </div>
                                         <div class="posts__post-head">
                                     <a >
-                                            <figure class="post-head__shape">
-                    <figcaption class="caption-letter">{{post.name.slice(0,1)}}</figcaption>
-                                            </figure>
+                                            <div class="post-head__shape" [ngStyle]="{'backgroundColor': indexcolors[post.name.charCodeAt(0)% 128]}">
+                    <span class="caption-letter">{{post.name.slice(0,1)}}</span>
+                                            </div>
                                             <div class="post-head__caption">
                                                 <a [routerLink]="['/profile']" [queryParams]="{'id':post.user_id}" class="post-head__name">{{post.name}}</a>
                                                 <span class="date">{{post.date | date}}</span>

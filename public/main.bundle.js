@@ -27,15 +27,19 @@ module.exports = ""
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<router-outlet></router-outlet>"
+module.exports = "<router-outlet></router-outlet>\n\n<div class=\"notification\" *ngIf=\"notification\">\n   <span>{{notification}}</span>\n</div>"
 
 /***/ }),
 
 /***/ "./src/app/app.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_service__ = __webpack_require__("./src/app/app.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_filter__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/filter.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -45,16 +49,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var app_service_1 = __webpack_require__("./src/app/app.service.ts");
-var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-__webpack_require__("./node_modules/rxjs/_esm5/add/operator/filter.js");
+
+
+
+
 var AppComponent = /** @class */ (function () {
     function AppComponent(activatedRoute, router, appService) {
         this.activatedRoute = activatedRoute;
         this.router = router;
         this.appService = appService;
+        this.notification = null;
     }
     ;
     AppComponent.prototype.ngOnInit = function () {
@@ -64,103 +68,134 @@ var AppComponent = /** @class */ (function () {
                 _this.router.navigate(['/login']);
             }
         });
+        this.notificationsSubscription = this.appService.notificationsSubject.subscribe(function (m) {
+            _this.notification = m;
+            setTimeout(function () {
+                _this.notification = null;
+            }, 5000);
+        });
+    };
+    AppComponent.prototype.ngOnDestroy = function () {
+        this.notificationsSubscription.unsubscribe();
     };
     AppComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-root',
             template: __webpack_require__("./src/app/app.component.html"),
             styles: [__webpack_require__("./src/app/app.component.css")],
-            providers: [app_service_1.AppService]
+            providers: [__WEBPACK_IMPORTED_MODULE_1__app_service__["a" /* AppService */]]
         }),
-        __metadata("design:paramtypes", [router_1.ActivatedRoute, router_1.Router, app_service_1.AppService])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__angular_router__["a" /* ActivatedRoute */], __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */], __WEBPACK_IMPORTED_MODULE_1__app_service__["a" /* AppService */]])
     ], AppComponent);
     return AppComponent;
 }());
-exports.AppComponent = AppComponent;
+
 
 
 /***/ }),
 
 /***/ "./src/app/app.module.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__("./node_modules/@angular/platform-browser/esm5/platform-browser.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("./src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__header_header_component__ = __webpack_require__("./src/app/header/header.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__header_user_user_component__ = __webpack_require__("./src/app/header/user/user.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__content_aside_aside_component__ = __webpack_require__("./src/app/content/aside/aside.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__content_content_component__ = __webpack_require__("./src/app/content/content.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__content_posts_posts_component__ = __webpack_require__("./src/app/content/posts/posts.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__content_connections_connections_component__ = __webpack_require__("./src/app/content/connections/connections.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__content_about_about_component__ = __webpack_require__("./src/app/content/about/about.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__content_posts_post_post_component__ = __webpack_require__("./src/app/content/posts/post/post.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__home_home_component__ = __webpack_require__("./src/app/home/home.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__content_nav_nav_component__ = __webpack_require__("./src/app/content/nav/nav.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__login_login_component__ = __webpack_require__("./src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__profile_profile_component__ = __webpack_require__("./src/app/profile/profile.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var platform_browser_1 = __webpack_require__("./node_modules/@angular/platform-browser/esm5/platform-browser.js");
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-var forms_1 = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
-var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
-var app_component_1 = __webpack_require__("./src/app/app.component.ts");
-var header_component_1 = __webpack_require__("./src/app/header/header.component.ts");
-var user_component_1 = __webpack_require__("./src/app/header/user/user.component.ts");
-var aside_component_1 = __webpack_require__("./src/app/content/aside/aside.component.ts");
-var content_component_1 = __webpack_require__("./src/app/content/content.component.ts");
-var posts_component_1 = __webpack_require__("./src/app/content/posts/posts.component.ts");
-var connections_component_1 = __webpack_require__("./src/app/content/connections/connections.component.ts");
-var about_component_1 = __webpack_require__("./src/app/content/about/about.component.ts");
-var post_component_1 = __webpack_require__("./src/app/content/posts/post/post.component.ts");
-var home_component_1 = __webpack_require__("./src/app/home/home.component.ts");
-var nav_component_1 = __webpack_require__("./src/app/content/nav/nav.component.ts");
-var login_component_1 = __webpack_require__("./src/app/login/login.component.ts");
-var profile_component_1 = __webpack_require__("./src/app/profile/profile.component.ts");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var appRoutes = [
-    { path: '', component: home_component_1.HomeComponent },
-    { path: 'profile', component: profile_component_1.ProfileComponent },
-    { path: 'home', component: home_component_1.HomeComponent },
-    { path: 'login', component: login_component_1.LoginComponent },
-    { path: 'connections', component: connections_component_1.ConnectionsComponent }
+    { path: '', component: __WEBPACK_IMPORTED_MODULE_14__home_home_component__["a" /* HomeComponent */] },
+    { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_17__profile_profile_component__["a" /* ProfileComponent */] },
+    { path: 'home', component: __WEBPACK_IMPORTED_MODULE_14__home_home_component__["a" /* HomeComponent */] },
+    { path: 'login', component: __WEBPACK_IMPORTED_MODULE_16__login_login_component__["a" /* LoginComponent */] },
+    { path: 'connections', component: __WEBPACK_IMPORTED_MODULE_11__content_connections_connections_component__["a" /* ConnectionsComponent */] }
 ];
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
-        core_1.NgModule({
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["I" /* NgModule */])({
             declarations: [
-                app_component_1.AppComponent,
-                header_component_1.HeaderComponent,
-                user_component_1.UserComponent,
-                aside_component_1.AsideComponent,
-                content_component_1.ContentComponent,
-                aside_component_1.AsideComponent,
-                posts_component_1.PostsComponent,
-                connections_component_1.ConnectionsComponent,
-                about_component_1.AboutComponent,
-                post_component_1.PostComponent,
-                home_component_1.HomeComponent,
-                nav_component_1.NavComponent,
-                login_component_1.LoginComponent,
-                profile_component_1.ProfileComponent
+                __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */],
+                __WEBPACK_IMPORTED_MODULE_6__header_header_component__["a" /* HeaderComponent */],
+                __WEBPACK_IMPORTED_MODULE_7__header_user_user_component__["a" /* UserComponent */],
+                __WEBPACK_IMPORTED_MODULE_8__content_aside_aside_component__["a" /* AsideComponent */],
+                __WEBPACK_IMPORTED_MODULE_9__content_content_component__["a" /* ContentComponent */],
+                __WEBPACK_IMPORTED_MODULE_8__content_aside_aside_component__["a" /* AsideComponent */],
+                __WEBPACK_IMPORTED_MODULE_10__content_posts_posts_component__["a" /* PostsComponent */],
+                __WEBPACK_IMPORTED_MODULE_11__content_connections_connections_component__["a" /* ConnectionsComponent */],
+                __WEBPACK_IMPORTED_MODULE_12__content_about_about_component__["a" /* AboutComponent */],
+                __WEBPACK_IMPORTED_MODULE_13__content_posts_post_post_component__["a" /* PostComponent */],
+                __WEBPACK_IMPORTED_MODULE_14__home_home_component__["a" /* HomeComponent */],
+                __WEBPACK_IMPORTED_MODULE_15__content_nav_nav_component__["a" /* NavComponent */],
+                __WEBPACK_IMPORTED_MODULE_16__login_login_component__["a" /* LoginComponent */],
+                __WEBPACK_IMPORTED_MODULE_17__profile_profile_component__["a" /* ProfileComponent */]
             ],
             imports: [
-                platform_browser_1.BrowserModule,
-                router_1.RouterModule.forRoot(appRoutes),
-                forms_1.FormsModule,
-                http_1.HttpModule
+                __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* RouterModule */].forRoot(appRoutes),
+                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormsModule */],
+                __WEBPACK_IMPORTED_MODULE_4__angular_http__["c" /* HttpModule */]
             ],
             providers: [],
-            bootstrap: [app_component_1.AppComponent]
+            bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
         })
     ], AppModule);
     return AppModule;
 }());
-exports.AppModule = AppModule;
+
 
 
 /***/ }),
 
 /***/ "./src/app/app.service.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__ = __webpack_require__("./node_modules/rxjs/_esm5/Subject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ngx_socket_io__ = __webpack_require__("./node_modules/ngx-socket-io/index.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -170,14 +205,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
-__webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
-var Subject_1 = __webpack_require__("./node_modules/rxjs/_esm5/Subject.js");
+
+
+
+
+
+var config = { url: 'http://localhost:8988', options: {} };
+__WEBPACK_IMPORTED_MODULE_4_ngx_socket_io__["b" /* SocketIoModule */].forRoot(config);
 var AppService = /** @class */ (function () {
     function AppService(http) {
         this.http = http;
+        this.activityLog = [];
     }
     AppService.prototype.hasToken = function () {
         var _this = this;
@@ -188,14 +226,20 @@ var AppService = /** @class */ (function () {
             this.token = localStorage.getItem('token');
             this.id = localStorage.getItem('id');
             if (this.token) {
-                // var socket = window.getIo()('http://localhost:3000?token=' + this.token);
-                // socket.on("activityLog", (m)=>{
-                //   console.log('[log] : ',m);
-                // });
-                // socket.on("notification", (m)=>{
-                //   console.log('[notification] : ',m);
-                // });
-                this.suggestedFriendsSubject = new Subject_1.Subject();
+                this.socket = new __WEBPACK_IMPORTED_MODULE_4_ngx_socket_io__["a" /* Socket */]({ url: 'http://localhost:3000?token=' + this.token, options: {} });
+                this.activityLogSubject = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["a" /* Subject */]();
+                this.notificationsSubject = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["a" /* Subject */]();
+                this.socket.on("activityLog", function (m) {
+                    _this.activityLog.push(m);
+                    if (_this.activityLog.length >= 5) {
+                        _this.activityLog = _this.activityLog.slice(_this.activityLog.length - 5, 5);
+                    }
+                    _this.activityLogSubject.next();
+                });
+                this.socket.on("notification", function (m) {
+                    _this.notificationsSubject.next(m);
+                });
+                this.suggestedFriendsSubject = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["a" /* Subject */]();
                 this.getSuggestedFriends().subscribe(function (r) {
                     _this.suggestedFriends = r;
                     _this.suggestedFriendsSubject.next();
@@ -205,21 +249,40 @@ var AppService = /** @class */ (function () {
         }
     };
     AppService.prototype.setToken = function (token, id) {
+        var _this = this;
         this.token = token;
         this.id = id;
         localStorage.setItem('token', token);
         localStorage.setItem('id', id);
+        this.socket = new __WEBPACK_IMPORTED_MODULE_4_ngx_socket_io__["a" /* Socket */]({ url: 'http://localhost:3000?token=' + this.token, options: {} });
+        this.activityLogSubject = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["a" /* Subject */]();
+        this.notificationsSubject = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["a" /* Subject */]();
+        this.socket.on("activityLog", function (m) {
+            _this.activityLog.push(m);
+            if (_this.activityLog.length >= 5) {
+                _this.activityLog = _this.activityLog.slice(_this.activityLog.length - 5, 5);
+            }
+            _this.activityLogSubject.next();
+        });
+        this.socket.on("notification", function (m) {
+            _this.notificationsSubject.next(m);
+        });
+        this.suggestedFriendsSubject = new __WEBPACK_IMPORTED_MODULE_3_rxjs_Subject__["a" /* Subject */]();
+        this.getSuggestedFriends().subscribe(function (r) {
+            _this.suggestedFriends = r;
+            _this.suggestedFriendsSubject.next();
+        });
     };
     AppService.prototype.getProfile = function (id) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.get('/api/profile' + (id ? ('?id=' + id) : ''), { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.getHome = function () {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.get('/api/home', { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.getSuggestedFriends = function () {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.get('/api/suggestedFriends', { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.login = function (user_name, password) {
@@ -227,7 +290,7 @@ var AppService = /** @class */ (function () {
     };
     AppService.prototype.follow = function (id) {
         var _this = this;
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/follow', { id: id }, { headers: headers }).map(function (res) {
             _this.getSuggestedFriends().subscribe(function (r) {
                 _this.suggestedFriends = r;
@@ -237,44 +300,44 @@ var AppService = /** @class */ (function () {
         });
     };
     AppService.prototype.unfollow = function (id) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/unfollow', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.addPost = function (body) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/add', { body: body }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.removePost = function (id) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/remove', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.sharePost = function (id) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/share', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.ratePost = function (id, rate) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/rate', { id: id, rate: rate }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.unratePost = function (id) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/unrate', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.addComment = function (id, body) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/comment', { id: id, body: body }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService.prototype.removeComment = function (id) {
-        var headers = new http_1.Headers({ 'x-access-token': this.token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'x-access-token': this.token });
         return this.http.post('/api/post/comment/remove', { id: id }, { headers: headers }).map(function (res) { return res.json(); });
     };
     AppService = __decorate([
-        core_1.Injectable(),
-        __metadata("design:paramtypes", [http_1.Http])
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
     ], AppService);
     return AppService;
 }());
-exports.AppService = AppService;
+
 
 
 /***/ }),
@@ -294,10 +357,11 @@ module.exports = "<p>\n  about works!\n</p>\n"
 /***/ }),
 
 /***/ "./src/app/content/about/about.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AboutComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -307,15 +371,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var AboutComponent = /** @class */ (function () {
     function AboutComponent() {
     }
     AboutComponent.prototype.ngOnInit = function () {
     };
     AboutComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-about',
             template: __webpack_require__("./src/app/content/about/about.component.html"),
             styles: [__webpack_require__("./src/app/content/about/about.component.css")]
@@ -324,7 +387,7 @@ var AboutComponent = /** @class */ (function () {
     ], AboutComponent);
     return AboutComponent;
 }());
-exports.AboutComponent = AboutComponent;
+
 
 
 /***/ }),
@@ -344,10 +407,11 @@ module.exports = "\n                <div class=\"suggested-connections\">\n     
 /***/ }),
 
 /***/ "./src/app/content/aside/aside.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AsideComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -357,15 +421,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var AsideComponent = /** @class */ (function () {
     function AsideComponent() {
     }
     AsideComponent.prototype.ngOnInit = function () {
     };
     AsideComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-aside',
             template: __webpack_require__("./src/app/content/aside/aside.component.html"),
             styles: [__webpack_require__("./src/app/content/aside/aside.component.css")]
@@ -374,7 +437,7 @@ var AsideComponent = /** @class */ (function () {
     ], AsideComponent);
     return AsideComponent;
 }());
-exports.AsideComponent = AsideComponent;
+
 
 
 /***/ }),
@@ -394,10 +457,11 @@ module.exports = "<div class=\"connections\">\n     <div class=\"connection\">\n
 /***/ }),
 
 /***/ "./src/app/content/connections/connections.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ConnectionsComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -407,15 +471,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var ConnectionsComponent = /** @class */ (function () {
     function ConnectionsComponent() {
     }
     ConnectionsComponent.prototype.ngOnInit = function () {
     };
     ConnectionsComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-connections',
             template: __webpack_require__("./src/app/content/connections/connections.component.html"),
             styles: [__webpack_require__("./src/app/content/connections/connections.component.css")]
@@ -424,7 +487,7 @@ var ConnectionsComponent = /** @class */ (function () {
     ], ConnectionsComponent);
     return ConnectionsComponent;
 }());
-exports.ConnectionsComponent = ConnectionsComponent;
+
 
 
 /***/ }),
@@ -444,10 +507,11 @@ module.exports = "<app-aside class=\"content__aside\"></app-aside>\n\n\n    <div
 /***/ }),
 
 /***/ "./src/app/content/content.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ContentComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -457,15 +521,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var ContentComponent = /** @class */ (function () {
     function ContentComponent() {
     }
     ContentComponent.prototype.ngOnInit = function () {
     };
     ContentComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-content',
             template: __webpack_require__("./src/app/content/content.component.html"),
             styles: [__webpack_require__("./src/app/content/content.component.css")]
@@ -474,7 +537,7 @@ var ContentComponent = /** @class */ (function () {
     ], ContentComponent);
     return ContentComponent;
 }());
-exports.ContentComponent = ContentComponent;
+
 
 
 /***/ }),
@@ -494,10 +557,11 @@ module.exports = "<div class=\"navigation\">\n  <ul class=\"navigation__nav\">\n
 /***/ }),
 
 /***/ "./src/app/content/nav/nav.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NavComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -507,15 +571,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var NavComponent = /** @class */ (function () {
     function NavComponent() {
     }
     NavComponent.prototype.ngOnInit = function () {
     };
     NavComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-nav',
             template: __webpack_require__("./src/app/content/nav/nav.component.html"),
             styles: [__webpack_require__("./src/app/content/nav/nav.component.css")]
@@ -524,7 +587,7 @@ var NavComponent = /** @class */ (function () {
     ], NavComponent);
     return NavComponent;
 }());
-exports.NavComponent = NavComponent;
+
 
 
 /***/ }),
@@ -544,10 +607,11 @@ module.exports = "<div class=\"posts__post\">\n                        <a href=\
 /***/ }),
 
 /***/ "./src/app/content/posts/post/post.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PostComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -557,15 +621,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var PostComponent = /** @class */ (function () {
     function PostComponent() {
     }
     PostComponent.prototype.ngOnInit = function () {
     };
     PostComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-post',
             template: __webpack_require__("./src/app/content/posts/post/post.component.html"),
             styles: [__webpack_require__("./src/app/content/posts/post/post.component.css")]
@@ -574,7 +637,7 @@ var PostComponent = /** @class */ (function () {
     ], PostComponent);
     return PostComponent;
 }());
-exports.PostComponent = PostComponent;
+
 
 
 /***/ }),
@@ -594,10 +657,11 @@ module.exports = "     <div class=\"posts\">\n     \t            <div class=\"po
 /***/ }),
 
 /***/ "./src/app/content/posts/posts.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PostsComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -607,15 +671,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var PostsComponent = /** @class */ (function () {
     function PostsComponent() {
     }
     PostsComponent.prototype.ngOnInit = function () {
     };
     PostsComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-posts',
             template: __webpack_require__("./src/app/content/posts/posts.component.html"),
             styles: [__webpack_require__("./src/app/content/posts/posts.component.css")]
@@ -624,7 +687,7 @@ var PostsComponent = /** @class */ (function () {
     ], PostsComponent);
     return PostsComponent;
 }());
-exports.PostsComponent = PostsComponent;
+
 
 
 /***/ }),
@@ -644,10 +707,11 @@ module.exports = "     <form action=\"#\" class=\"search\">\n                <in
 /***/ }),
 
 /***/ "./src/app/header/header.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HeaderComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -657,15 +721,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var HeaderComponent = /** @class */ (function () {
     function HeaderComponent() {
     }
     HeaderComponent.prototype.ngOnInit = function () {
     };
     HeaderComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-header',
             template: __webpack_require__("./src/app/header/header.component.html"),
             styles: [__webpack_require__("./src/app/header/header.component.css")]
@@ -674,7 +737,7 @@ var HeaderComponent = /** @class */ (function () {
     ], HeaderComponent);
     return HeaderComponent;
 }());
-exports.HeaderComponent = HeaderComponent;
+
 
 
 /***/ }),
@@ -694,10 +757,11 @@ module.exports = "  <div class=\"user\">\n\t                <figure class=\"user
 /***/ }),
 
 /***/ "./src/app/header/user/user.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -707,15 +771,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+
 var UserComponent = /** @class */ (function () {
     function UserComponent() {
     }
     UserComponent.prototype.ngOnInit = function () {
     };
     UserComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-user',
             template: __webpack_require__("./src/app/header/user/user.component.html"),
             styles: [__webpack_require__("./src/app/header/user/user.component.css")]
@@ -724,7 +787,7 @@ var UserComponent = /** @class */ (function () {
     ], UserComponent);
     return UserComponent;
 }());
-exports.UserComponent = UserComponent;
+
 
 
 /***/ }),
@@ -739,15 +802,17 @@ module.exports = ""
 /***/ "./src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"section-home\">\n\n        <div class=\"content\">\n            <div class=\"content__aside\">\n                <div class=\"search\">\n                    <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                    <button class=\"search__button\">\n                        <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                    </button>\n                </div>\n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\" *ngFor=\"let one of suggestedFriends\">\n                            <a  class=\"person__wraper\">\n\n                                <figure class=\"person__shape\">\n                    <figcaption class=\"caption-letter\">{{one.name.slice(0,1)}}</figcaption>                                    \n                                </figure>\n                                <div class=\"person__caption\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':one._id}\" class=\"person__name\">{{one.name}}</a>\n\n                                </div>\n                            </a>\n                            <button (click)=\"follow(one._id)\" class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\">\n                                <a  class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> rated\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a>'s post\n                            </div>\n                        </div>\n                    </div>\n                <div class=\"links\">\n                    <a routerLink=\"/profile\" class=\"link\">profile</a>\n                    <a  class=\"link\">logout</a>\n                </div>\n            </div>\n\n\n            <div class=\"content__area\">\n\n\n                <div class=\"posts\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\" #in>\n                                <button (click)=\"addPost(in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n\n\n                        <div class=\"posts__post\" *ngFor=\"let post of posts;let i of index\">\n                                    <div class=\"post-shared\" *ngIf=\"post.shared\">\n                                        <!-- <img src=\"/assets/img/share-symbol.svg\" class=\"share-icon\" > -->\n                                        <span class=\"shared\"> > from <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\" class=\"log\">{{post.results.name}}</a></span>\n                                    </div>\n                                        <div class=\"posts__post-head\">\n                                    <a >\n                                            <figure class=\"post-head__shape\">\n                    <figcaption class=\"caption-letter\">{{post.name.slice(0,1)}}</figcaption>\n                                            </figure>\n                                            <div class=\"post-head__caption\">\n                                                <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\">{{post.name}}</a>\n                                                <span class=\"date\">{{post.date | date}}</span>\n                                            </div>\n                                        </a>\n                                        <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                        \n                                    </div>\n            \n                                    <div class=\"posts__post-body\">\n                                        <p>\n                                            {{post.body}}\n                                        </p>\n                                    </div>\n                                    <div class=\"posts__post-options\">\n                                        <div class=\"post-rate\"></div>\n                                        <button (click)=\"sharePost(post._id)\" class=\"btn-remove\">share </button>\n                                        \n                                    </div>\n                                    <div class=\"posts__post-comments\">\n            \n                                        <div class=\"comments-head\">Comments</div>\n                                        <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                           <div class=\"wraper\">\n                                               <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}}</a>\n                                               <span class=\"date\">{{comment.date | date}}</span>\n                                           </div>\n                                            \n                                            <p class=\"comment-body\">{{comment.body}}</p>\n                                        <button *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                               \n                                        </div>\n                                        <form action=\"\" class=\"comments__add\">\n                                            <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\" #in>\n                                            <button (click)=\"addComment(post._id, in.value);in.value = ''\" type=\"submit\" class=\"btn-post\">comment</button>\n                                        </form>\n                                    </div>\n                                </div>   \n    \n                    </div>\n\n\n            </div>\n\n\n        </div>\n\n    </section>"
+module.exports = "<section class=\"section-home\">\n\n        <div class=\"content\">\n            <div class=\"content__aside\">\n                <div class=\"search\">\n                    <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                    <button class=\"search__button\">\n                        <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                    </button>\n                </div>\n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\" *ngFor=\"let one of suggestedFriends\">\n                            <a  class=\"person__wraper\">\n\n                                <div class=\"person__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[one.name.charCodeAt(0)% 128]}\">\n                                    <span class=\"caption-letter\">{{one.name.slice(0,1)}}</span>\n                                </div>\n                                <div class=\"person__caption\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':one._id}\" class=\"person__name\">{{one.name}}</a>\n\n                                </div>\n                            </a>\n                            <button (click)=\"follow(one._id)\" class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\" *ngFor=\"let msg of activityLog\">\n                                <span  class=\"log\">{{msg}}</span>\n                            </div>\n                        </div>\n                    </div>\n                <div class=\"links\">\n                    <a routerLink=\"/profile\" class=\"link\">profile</a>\n                    <a routerLink=\"/home\" class=\"link\">home</a>\n                    <a (click)=\"logout()\" class=\"link\">logout</a>\n                </div>\n            </div>\n\n\n            <div class=\"content__area\">\n\n\n                <div class=\"posts\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\" #in>\n                                <button (click)=\"addPost(in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n\n\n                        <div class=\"posts__post\" *ngFor=\"let post of posts;let i of index\">\n                                    <div class=\"post-shared\" *ngIf=\"post.shared\">\n                                        <!-- <img src=\"/assets/img/share-symbol.svg\" class=\"share-icon\" > -->\n                                        <span class=\"shared\"> > from <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\" class=\"log\">{{post.results.name}}</a></span>\n                                    </div>\n                                        <div class=\"posts__post-head\">\n                                    <a >\n                                            <div class=\"post-head__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[post.name.charCodeAt(0)% 128]}\">\n                                                <span class=\"caption-letter\">{{post.name.slice(0,1)}}</span>\n                                            </div>\n                                            <div class=\"post-head__caption\">\n                                                <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\">{{post.name}}</a>\n                                                <span class=\"date\">{{post.date | date}}</span>\n                                            </div>\n                                        </a>\n                                        <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                        \n                                    </div>\n            \n                                    <div class=\"posts__post-body\">\n                                        <p>\n                                            {{post.body}}\n                                        </p>\n                                    </div>\n                                    <div class=\"posts__post-options\">\n                                        <div class=\"post-rate\"></div>\n                                        <button (click)=\"sharePost(post._id)\" class=\"btn-remove\">share </button>\n                                        \n                                    </div>\n                                    <div class=\"posts__post-comments\">\n            \n                                        <div class=\"comments-head\">Comments</div>\n                                        <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                           <div class=\"wraper\">\n                                               <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}}</a>\n                                               <span class=\"date\">{{comment.date | date}}</span>\n                                           </div>\n                                            \n                                            <p class=\"comment-body\">{{comment.body}}</p>\n                                        <button *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                               \n                                        </div>\n                                        <form action=\"\" class=\"comments__add\">\n                                            <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\" #in>\n                                            <button (click)=\"addComment(post._id, in.value);in.value = ''\" type=\"submit\" class=\"btn-post\">comment</button>\n                                        </form>\n                                    </div>\n                                </div>   \n    \n                    </div>\n\n\n            </div>\n\n\n        </div>\n\n    </section>"
 
 /***/ }),
 
 /***/ "./src/app/home/home.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomeComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_service__ = __webpack_require__("./src/app/app.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -757,15 +822,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var app_service_1 = __webpack_require__("./src/app/app.service.ts");
+
+
 var HomeComponent = /** @class */ (function () {
     function HomeComponent(appService) {
         this.appService = appService;
         this.id = '';
         this.name = '';
         this.posts = [];
+        this.activityLog = [];
+        this.indexcolors = [
+            "#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
+            "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
+            "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
+            "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
+            "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
+            "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
+            "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
+            "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C",
+            "#34362D", "#B4A8BD", "#00A6AA", "#452C2C", "#636375", "#A3C8C9", "#FF913F", "#938A81",
+            "#575329", "#00FECF", "#B05B6F", "#8CD0FF", "#3B9700", "#04F757", "#C8A1A1", "#1E6E00",
+            "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
+            "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",
+            "#5B4534", "#FDE8DC", "#404E55", "#0089A3", "#CB7E98", "#A4E804", "#324E72", "#6A3A4C",
+            "#83AB58", "#001C1E", "#D1F7CE", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
+            "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
+            "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"
+        ];
     }
     HomeComponent.prototype.updateSuggestions = function () {
         this.suggestedFriends = this.appService.suggestedFriends;
@@ -783,6 +866,9 @@ var HomeComponent = /** @class */ (function () {
         this.updateSuggestions();
         this.appService.suggestedFriendsSubject.subscribe(function () {
             _this.updateSuggestions();
+        });
+        this.LogSubscription = this.appService.activityLogSubject.subscribe(function () {
+            _this.activityLog = _this.appService.activityLog;
         });
         this.updateView();
     };
@@ -816,17 +902,25 @@ var HomeComponent = /** @class */ (function () {
         }
         return false;
     };
+    HomeComponent.prototype.logout = function () {
+        localStorage.removeItem('id');
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    };
+    HomeComponent.prototype.ngOnDestroy = function () {
+        this.LogSubscription.unsubscribe();
+    };
     HomeComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-home',
             template: __webpack_require__("./src/app/home/home.component.html"),
             styles: [__webpack_require__("./src/app/home/home.component.css")]
         }),
-        __metadata("design:paramtypes", [app_service_1.AppService])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__app_service__["a" /* AppService */]])
     ], HomeComponent);
     return HomeComponent;
 }());
-exports.HomeComponent = HomeComponent;
+
 
 
 /***/ }),
@@ -846,10 +940,13 @@ module.exports = "<section class=\"section-signup\">\n        <div class=\"bg-vi
 /***/ }),
 
 /***/ "./src/app/login/login.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_service__ = __webpack_require__("./src/app/app.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -859,10 +956,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-var app_service_1 = __webpack_require__("./src/app/app.service.ts");
+
+
+
 var LoginComponent = /** @class */ (function () {
     function LoginComponent(appService, router) {
         this.appService = appService;
@@ -878,16 +974,16 @@ var LoginComponent = /** @class */ (function () {
         });
     };
     LoginComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-login',
             template: __webpack_require__("./src/app/login/login.component.html"),
             styles: [__webpack_require__("./src/app/login/login.component.css")]
         }),
-        __metadata("design:paramtypes", [app_service_1.AppService, router_1.Router])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__app_service__["a" /* AppService */], __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */]])
     ], LoginComponent);
     return LoginComponent;
 }());
-exports.LoginComponent = LoginComponent;
+
 
 
 /***/ }),
@@ -902,15 +998,18 @@ module.exports = ""
 /***/ "./src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"section-profile\">\n        <div class=\"header\">\n\n            <a  class=\"user\">\n                <figure class=\"user__shape\">\n                    <figcaption class=\"caption-letter\">{{name.slice(0,1)}}</figcaption>\n                </figure>\n                <div class=\"user__caption\">\n                    <div class=\"user__name\">{{name}}</div>\n                    <div class=\"user__rate\">{{rate || '0.0'}}</div>\n                </div>\n              <button *ngIf=\"status == 'follower'\" (click)=\"follow(id)\" class=\"btn-follow2\">follow</button>\n              <button *ngIf=\"status == 'following' || status == 'both'\" (click)=\"unfollow(id)\" class=\"btn-follow2\">unfollow</button>\n\n            </a>\n\n\n        </div>\n\n        <div class=\"content\">\n                <div class=\"content__aside\">\n                        <div class=\"search\">\n                                <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                                <button class=\"search__button\">\n                                    <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                                </button>\n                            </div>\n                    \n                \n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\" *ngFor=\"let one of suggestedFriends\">\n                            <a  class=\"person__wraper\">\n\n                                <figure class=\"person__shape\">\n                                    <figcaption class=\"caption-letter\">{{one.name.slice(0,1)}}</figcaption>\n                                </figure>\n                                <div class=\"person__caption\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':one._id}\" class=\"person__name\">{{one.name}}</a>\n\n                                </div>\n                            </a>\n                            <button (click)=\"follow(one._id)\" class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                    <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\">\n                                <a  class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> rated your post\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> followed\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a>\n                            </div>\n                            <div class=\"activity-log__event\">\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a> rated\n                                    <a  class=\"log\"><strong>Nader Yasser</strong></a>'s post\n                            </div>\n                        </div>\n                    </div>\n    \n                    <div class=\"links\">\n                        <a routerLink=\"/home\" class=\"link\">home</a>\n                        <a  class=\"link\">logout</a>\n                    </div>\n                </div>\n\n            <div class=\"content__area\">\n                <div class=\"navigation\">\n                    <ul class=\"navigation__nav\">\n                        <li>\n                            <a (click)=\"this.section = 'activity'\" [ngClass]=\"{'active': this.section == 'activity'}\" class=\"link\">activity</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'followers'\" [ngClass]=\"{'active': this.section == 'followers'}\" class=\"link\">followers ({{followers.length}})</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'following'\" [ngClass]=\"{'active': this.section == 'following'}\" class=\"link\">following ({{following.length}})</a>\n                        </li>\n                    </ul>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'followers'\">\n                   <div class=\"connection\" *ngFor=\"let follower of followers\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <figure class=\"connection__shape\">\n                    <figcaption class=\"caption-letter\">{{follower.name.slice(0,1)}}</figcaption>                            \n                        </figure>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'following'\">\n                   <div class=\"connection\" *ngFor=\"let follower of following\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <figure class=\"connection__shape\">\n                    <figcaption class=\"caption-letter\">{{follower.name.slice(0,1)}}</figcaption>\n\n                        </figure>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"posts\" *ngIf=\"this.section == 'activity'\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\" #in>\n                                <button (click)=\"addPost(in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n\n\n                        <div class=\"posts__post\" *ngFor=\"let post of posts;let i of index\">\n                                    <div class=\"post-shared\" *ngIf=\"post.shared\">\n                                        <!-- <img src=\"/assets/img/share-symbol.svg\" class=\"share-icon\" > -->\n                                        <span class=\"shared\"> > from <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\" class=\"log\">{{post.results.name}}</a></span>\n                                    </div>\n                                        <div class=\"posts__post-head\">\n                                    <a >\n                                            <figure class=\"post-head__shape\">\n                    <figcaption class=\"caption-letter\">{{post.name.slice(0,1)}}</figcaption>\n                                            </figure>\n                                            <div class=\"post-head__caption\">\n                                                <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\">{{post.name}}</a>\n                                                <span class=\"date\">{{post.date | date}}</span>\n                                            </div>\n                                        </a>\n                                        <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                        \n                                    </div>\n            \n                                    <div class=\"posts__post-body\">\n                                        <p>\n                                            {{post.body}}\n                                        </p>\n                                    </div>\n                                    <div class=\"posts__post-options\">\n                                        <div class=\"post-rate\"></div>\n                                        <button (click)=\"sharePost(post._id)\" class=\"btn-remove\">share </button>\n                                        \n                                    </div>\n                                    <div class=\"posts__post-comments\">\n            \n                                        <div class=\"comments-head\">Comments</div>\n                                        <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                           <div class=\"wraper\">\n                                               <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}}</a>\n                                               <span class=\"date\">{{comment.date | date}}</span>\n                                           </div>\n                                            \n                                            <p class=\"comment-body\">{{comment.body}}</p>\n                                        <button *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                               \n                                        </div>\n                                        <form action=\"\" class=\"comments__add\">\n                                            <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\" #in>\n                                            <button (click)=\"addComment(post._id, in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">comment</button>\n                                        </form>\n                                    </div>\n                                </div>   \n    \n                    </div>\n\n                </div>\n\n\n            </div>\n\n    </section>"
+module.exports = "<section class=\"section-profile\">\n        <div class=\"header\">\n\n            <a  class=\"user\">\n                <div class=\"user__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[name.charCodeAt(0)% 128]}\">\n                    <span class=\"caption-letter1\">{{name.slice(0,1)}}</span>\n                </div>\n                <div class=\"user__caption\">\n                    <div class=\"user__name\">{{name}}</div>\n                    <div class=\"user__rate\">{{rate || '0.0'}}</div>\n                </div>\n              <button *ngIf=\"status == 'follower'\" (click)=\"follow(id)\" class=\"btn-follow2\">follow</button>\n              <button *ngIf=\"status == 'following' || status == 'both'\" (click)=\"unfollow(id)\" class=\"btn-follow2\">unfollow</button>\n\n            </a>\n\n\n        </div>\n\n        <div class=\"content\">\n                <div class=\"content__aside\">\n                        <div class=\"search\">\n                                <input type=\"text\" class=\"search__input\" placeholder=\"Search\">\n                                <button class=\"search__button\">\n                                    <img src=\"assets/img/search.svg\" alt=\"\" class=\"search__icon\">\n                                </button>\n                            </div>\n                    \n                \n                <div class=\"suggested-connections\">\n                    <h2 class=\"heading-primary--aside\">suggested connections</h2>\n                    <div class=\"s-connections\">\n                        <div class=\"person\" *ngFor=\"let one of suggestedFriends\">\n                            <a  class=\"person__wraper\">\n\n                                <div class=\"person__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[one.name.charCodeAt(0)% 128]}\">\n                                    <span class=\"caption-letter\">{{one.name.slice(0,1)}}</span>\n                                </div>\n                                <div class=\"person__caption\">\n                                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':one._id}\" class=\"person__name\">{{one.name}}</a>\n\n                                </div>\n                            </a>\n                            <button (click)=\"follow(one._id)\" class=\"btn-follow\">follow</button>\n\n                        </div>\n                    </div>\n                </div>\n                    <div class=\"activity-log\">\n                        <h2 class=\"heading-primary--aside\">activity log</h2>\n                        <div class=\"activity-log__logs\">\n                            <div class=\"activity-log__event\" *ngFor=\"let msg of activityLog\">\n                                <span  class=\"log\">{{msg}}</span>\n                            </div>\n                        </div>\n                    </div>\n    \n                    <div class=\"links\">\n                        <a routerLink=\"/profile\" class=\"link\">profile</a>\n                        <a routerLink=\"/home\" class=\"link\">home</a>\n                        <a (click)=\"logout()\" class=\"link\">logout</a>\n                    </div>\n                </div>\n\n            <div class=\"content__area\">\n                <div class=\"navigation\">\n                    <ul class=\"navigation__nav\">\n                        <li>\n                            <a (click)=\"this.section = 'activity'\" [ngClass]=\"{'active': this.section == 'activity'}\" class=\"link\">activity</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'followers'\" [ngClass]=\"{'active': this.section == 'followers'}\" class=\"link\">followers ({{followers.length}})</a>\n                        </li>\n                        <li>\n                            <a (click)=\"this.section = 'following'\" [ngClass]=\"{'active': this.section == 'following'}\" class=\"link\">following ({{following.length}})</a>\n                        </li>\n                    </ul>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'followers'\">\n                   <div class=\"connection\" *ngFor=\"let follower of followers\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <div class=\"connection__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[follower.name.charCodeAt(0)% 128]}\">\n                    <span class=\"caption-letter\">{{follower.name.slice(0,1)}}</span>                            \n                        </div>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"connections\" *ngIf=\"this.section == 'following'\">\n                   <div class=\"connection\" *ngFor=\"let follower of following\">\n                    <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\" class=\"connection__wraper\">\n\n                        <div class=\"connection__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[follower.name.charCodeAt(0)% 128]}\">\n                    <span class=\"caption-letter\">{{follower.name.slice(0,1)}}</span>\n\n                        </div>\n                        <div class=\"connection__caption\">\n                            <div class=\"connection__name\">{{follower.name}}</div>\n                        </div>\n                    </a>\n                    <a class=\"btn-follow\" [routerLink]=\"['/profile']\" [queryParams]=\"{'id':follower._id}\">view profile</a>\n                    \n                   </div>\n                </div>\n\n                <div class=\"posts\" *ngIf=\"this.section == 'activity'\">\n                        <div class=\"posts__add-post\">\n                            <form action=\"\" class=\"posts__add\">\n                                <input type=\"text\" class=\"posts__add__input\" placeholder=\"whats on tour mind...\" #in>\n                                <button (click)=\"addPost(in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">Post</button>\n                            </form>\n                        </div>\n\n\n                        <div class=\"posts__post\" *ngFor=\"let post of posts;let i of index\">\n                                    <div class=\"post-shared\" *ngIf=\"post.shared\">\n                                        <!-- <img src=\"/assets/img/share-symbol.svg\" class=\"share-icon\" > -->\n                                        <span class=\"shared\"> > from <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.results.user_id}\" class=\"log\">{{post.results.name}}</a></span>\n                                    </div>\n                                        <div class=\"posts__post-head\">\n                                    <a >\n                                            <div class=\"post-head__shape\" [ngStyle]=\"{'backgroundColor': indexcolors[post.name.charCodeAt(0)% 128]}\">\n                    <span class=\"caption-letter\">{{post.name.slice(0,1)}}</span>\n                                            </div>\n                                            <div class=\"post-head__caption\">\n                                                <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':post.user_id}\" class=\"post-head__name\">{{post.name}}</a>\n                                                <span class=\"date\">{{post.date | date}}</span>\n                                            </div>\n                                        </a>\n                                        <button *ngIf=\"compare(post.user_id)\" (click)=\"removePost(post._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                        \n                                    </div>\n            \n                                    <div class=\"posts__post-body\">\n                                        <p>\n                                            {{post.body}}\n                                        </p>\n                                    </div>\n                                    <div class=\"posts__post-options\">\n                                        <div class=\"post-rate\"></div>\n                                        <button (click)=\"sharePost(post._id)\" class=\"btn-remove\">share </button>\n                                        \n                                    </div>\n                                    <div class=\"posts__post-comments\">\n            \n                                        <div class=\"comments-head\">Comments</div>\n                                        <div class=\"post__comment\" *ngFor=\"let comment of post.comments\">\n                                           <div class=\"wraper\">\n                                               <a [routerLink]=\"['/profile']\" [queryParams]=\"{'id':comment.user_id}\" class=\"comment-name\">{{comment.name}}</a>\n                                               <span class=\"date\">{{comment.date | date}}</span>\n                                           </div>\n                                            \n                                            <p class=\"comment-body\">{{comment.body}}</p>\n                                        <button *ngIf=\"compare(comment.user_id)\" (click)=\"removeComment(comment._id)\" class=\"btn-remove\"><img  class=\"remove-icon\" src=\"/assets/img/delete-button.svg\" ></button>\n                                               \n                                        </div>\n                                        <form action=\"\" class=\"comments__add\">\n                                            <input type=\"text\" class=\"comments__add__input\" placeholder=\"write something\" #in>\n                                            <button (click)=\"addComment(post._id, in.value);in.value = '';\" type=\"submit\" class=\"btn-post\">comment</button>\n                                        </form>\n                                    </div>\n                                </div>   \n    \n                    </div>\n\n                </div>\n\n\n            </div>\n\n    </section>"
 
 /***/ }),
 
 /***/ "./src/app/profile/profile.component.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfileComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_service__ = __webpack_require__("./src/app/app.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -920,10 +1019,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-var app_service_1 = __webpack_require__("./src/app/app.service.ts");
+
+
+
 var ProfileComponent = /** @class */ (function () {
     function ProfileComponent(route, appService) {
         this.route = route;
@@ -936,6 +1034,25 @@ var ProfileComponent = /** @class */ (function () {
         this.section = 'activity';
         this.rate = 0.0;
         this.posts = [];
+        this.activityLog = [];
+        this.indexcolors = [
+            "#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
+            "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
+            "#5A0007", "#809693", "#FEFFE6", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
+            "#61615A", "#BA0900", "#6B7900", "#00C2A0", "#FFAA92", "#FF90C9", "#B903AA", "#D16100",
+            "#DDEFFF", "#000035", "#7B4F4B", "#A1C299", "#300018", "#0AA6D8", "#013349", "#00846F",
+            "#372101", "#FFB500", "#C2FFED", "#A079BF", "#CC0744", "#C0B9B2", "#C2FF99", "#001E09",
+            "#00489C", "#6F0062", "#0CBD66", "#EEC3FF", "#456D75", "#B77B68", "#7A87A1", "#788D66",
+            "#885578", "#FAD09F", "#FF8A9A", "#D157A0", "#BEC459", "#456648", "#0086ED", "#886F4C",
+            "#34362D", "#B4A8BD", "#00A6AA", "#452C2C", "#636375", "#A3C8C9", "#FF913F", "#938A81",
+            "#575329", "#00FECF", "#B05B6F", "#8CD0FF", "#3B9700", "#04F757", "#C8A1A1", "#1E6E00",
+            "#7900D7", "#A77500", "#6367A9", "#A05837", "#6B002C", "#772600", "#D790FF", "#9B9700",
+            "#549E79", "#FFF69F", "#201625", "#72418F", "#BC23FF", "#99ADC0", "#3A2465", "#922329",
+            "#5B4534", "#FDE8DC", "#404E55", "#0089A3", "#CB7E98", "#A4E804", "#324E72", "#6A3A4C",
+            "#83AB58", "#001C1E", "#D1F7CE", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
+            "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
+            "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"
+        ];
     }
     ProfileComponent.prototype.updateSuggestions = function () {
         this.updateView(this.id);
@@ -949,7 +1066,7 @@ var ProfileComponent = /** @class */ (function () {
             _this.following = response.following;
             _this.name = response.name;
             _this.status = response.status;
-            _this.id = _this.appService.id;
+            _this.id = id;
             var i = 0;
             _this.posts = response.posts;
             _this.rate = response.posts.reduce(function (aggr, cur) {
@@ -967,7 +1084,11 @@ var ProfileComponent = /** @class */ (function () {
             _this.updateSuggestions();
         });
         this.profileSubscription = this.route.queryParams.subscribe(function (params) {
+            console.log("yes", params["id"]);
             _this.updateView(params["id"]);
+        });
+        this.LogSubscription = this.appService.activityLogSubject.subscribe(function () {
+            _this.activityLog = _this.appService.activityLog;
         });
     };
     ProfileComponent.prototype.removePost = function (id) {
@@ -996,7 +1117,7 @@ var ProfileComponent = /** @class */ (function () {
     };
     ProfileComponent.prototype.unfollow = function (id) {
         var _this = this;
-        this.appService.follow(id).subscribe(function () { return _this.updateSuggestions(); });
+        this.appService.unfollow(id).subscribe(function () { return _this.updateSuggestions(); });
     };
     ProfileComponent.prototype.compare = function (id) {
         if (id == this.id) {
@@ -1004,35 +1125,40 @@ var ProfileComponent = /** @class */ (function () {
         }
         return false;
     };
+    ProfileComponent.prototype.logout = function () {
+        localStorage.removeItem('id');
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    };
     ProfileComponent.prototype.ngOnDestroy = function () {
         this.profileSubscription.unsubscribe();
+        this.LogSubscription.unsubscribe();
     };
     ProfileComponent = __decorate([
-        core_1.Component({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-profile',
             template: __webpack_require__("./src/app/profile/profile.component.html"),
             styles: [__webpack_require__("./src/app/profile/profile.component.css")]
         }),
-        __metadata("design:paramtypes", [router_1.ActivatedRoute, app_service_1.AppService])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */], __WEBPACK_IMPORTED_MODULE_2__app_service__["a" /* AppService */]])
     ], ProfileComponent);
     return ProfileComponent;
 }());
-exports.ProfileComponent = ProfileComponent;
+
 
 
 /***/ }),
 
 /***/ "./src/environments/environment.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.environment = {
+var environment = {
     production: false
 };
 
@@ -1040,19 +1166,22 @@ exports.environment = {
 /***/ }),
 
 /***/ "./src/main.ts":
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__("./node_modules/@angular/platform-browser-dynamic/esm5/platform-browser-dynamic.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__("./src/app/app.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("./src/environments/environment.ts");
 
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var platform_browser_dynamic_1 = __webpack_require__("./node_modules/@angular/platform-browser-dynamic/esm5/platform-browser-dynamic.js");
-var app_module_1 = __webpack_require__("./src/app/app.module.ts");
-var environment_1 = __webpack_require__("./src/environments/environment.ts");
-if (environment_1.environment.production) {
-    core_1.enableProdMode();
+
+
+
+if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* enableProdMode */])();
 }
-platform_browser_dynamic_1.platformBrowserDynamic().bootstrapModule(app_module_1.AppModule)
+Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */])
     .catch(function (err) { return console.log(err); });
 
 
@@ -1063,6 +1192,13 @@ platform_browser_dynamic_1.platformBrowserDynamic().bootstrapModule(app_module_1
 
 module.exports = __webpack_require__("./src/main.ts");
 
+
+/***/ }),
+
+/***/ 1:
+/***/ (function(module, exports) {
+
+/* (ignored) */
 
 /***/ })
 

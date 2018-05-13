@@ -567,14 +567,11 @@ a.log {
       overflow: hidden;
       border-radius: 50%;
       border: 2px solid #4e4450; 
-      position: relative;}
-      @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
-        .header .user__shape {
-          -webkit-clip-path: circle(50% at 50% 50%);
-          clip-path: circle(50% at 50% 50%);
-          -webkit-shape-outside: circle(50% at 50% 50%);
-          shape-outside: circle(50% at 50% 50%);
-          border-radius: none; } }
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .header .user__img {
       width: 100%;
       transform: scale(1.1);
@@ -683,20 +680,15 @@ a.log {
           justify-content: space-between; }
           .content__area .posts__post-head .post-head__shape {
             width: 4rem;
-            height: 4rem;
-            background-color: #d38baf;
-            overflow: hidden;
-            border-radius: 50%;
-            border: 1px solid #746566a8;
-            align-self: center; 
-            position: relative;}
-            @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
-              .content__area .posts__post-head .post-head__shape {
-                -webkit-clip-path: circle(50% at 50% 50%);
-                clip-path: circle(50% at 50% 50%);
-                -webkit-shape-outside: circle(50% at 50% 50%);
-                shape-outside: circle(50% at 50% 50%);
-                border-radius: none; } }
+      height: 4rem;
+      background-color: #d38baf;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 2px solid #4e4450; 
+      display: flex;
+      justify-content: center;
+      align-items: center;;
+                border-radius: none; } 
           .content__area .posts__post-head .post-head__img {
             width: 100%;
             transform: scale(1.1);
@@ -755,20 +747,14 @@ a.log {
         flex-direction: row; }
       .content .connections .connection__shape {
         width: 4rem;
-        height: 4rem;
-        background-color: #d38baf;
-        overflow: hidden;
-        border-radius: 50%;
-        border: 1px solid #746566a8;
-        align-self: center; 
-        position: relative;}
-        @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
-          .content .connections .connection__shape {
-            -webkit-clip-path: circle(50% at 50% 50%);
-            clip-path: circle(50% at 50% 50%);
-            -webkit-shape-outside: circle(50% at 50% 50%);
-            shape-outside: circle(50% at 50% 50%);
-            border-radius: none; } }
+      height: 4rem;
+      background-color: #d38baf;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 2px solid #4e4450; 
+      display: flex;
+      justify-content: center;
+      align-items: center; }
       .content .connections .connection__img {
         width: 100%;
         transform: scale(1.1);
@@ -819,22 +805,14 @@ a.log {
     flex-direction: row; }
   .person__shape {
     width: 4rem;
-    height: 4rem;
-    background-color: #d38baf;
-    overflow: hidden;
-    border-radius: 50%;
-    border: 1px solid #746566a8;
-    align-self: center;
-    display: flex;
-    align-items: center; 
-    position: relative;}
-    @supports (clip-path: polygon(0 0)) or (-webkit-clip-path: polygon(0 0)) {
-      .person__shape {
-        -webkit-clip-path: circle(50% at 50% 50%);
-        clip-path: circle(50% at 50% 50%);
-        -webkit-shape-outside: circle(50% at 50% 50%);
-        shape-outside: circle(50% at 50% 50%);
-        border-radius: none; } }
+      height: 4rem;
+      background-color: #d38baf;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 2px solid #4e4450; 
+      display: flex;
+      justify-content: center;
+      align-items: center; }
   .person__img {
     width: 100%;
     transform: scale(1.1);
@@ -880,9 +858,13 @@ a.log {
   cursor: pointer;
 }
 .caption-letter{
-  position: absolute;
-  top: 15%;
-  left: 34%;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 170%;
+  backface-visibility: hidden;
+}
+.caption-letter1{
   color: #fff;
   text-transform: uppercase;
   text-align: center;
