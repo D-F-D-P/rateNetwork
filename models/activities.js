@@ -21,23 +21,23 @@ schema.statics.updateManyPromised = function(criteria, update){
 		});
 }
 
-schema.statics.rate = function (user_id, post_id,value)
+schema.statics.like = function (user_id, post_id)
 {
 	user_id = mongoose.Types.ObjectId(user_id);
 	post_id = mongoose.Types.ObjectId(post_id);
     let Activity = this;
-    return Activity.remove({ user_id, post_id, type: "rate"}).then(()=>{
-	    let temp = new Activity({ user_id, post_id, date: new Date(), value, type: "rate" });
+    return Activity.remove({ user_id, post_id, type: "like"}).then(()=>{
+	    let temp = new Activity({ user_id, post_id, date: new Date(), type: "like" });
 	    return temp.save();
     });
 }
 
-schema.statics.unrate = function (user_id, post_id)
+schema.statics.unlike = function (user_id, post_id)
 {
 	user_id = mongoose.Types.ObjectId(user_id);
 	post_id = mongoose.Types.ObjectId(post_id);
 	let Activity = this;
-    return Activity.remove({ user_id, post_id, type: "rate"});
+    return Activity.remove({ user_id, post_id, type: "like"});
 }
 
 schema.statics.comment = function (user_id, post_id, body)

@@ -23,11 +23,11 @@ const { Connection } = require('./connections');
 // });
 
 
-// User.suggested_friends("5af31ab8cb33c516f0add6bc").then((r)=>{
-// 		console.log(JSON.stringify(r,null,2));
-// 	}).catch((e)=>{
-// 		console.log(e);
-// 	});
+User.suggested_friends("5af31ab8cb33c516f0add6bc").then((r)=>{
+	console.log(JSON.stringify(r,null,2));
+}).catch((e)=>{
+	console.log(e);
+	});
 
 // Activity.comment("5af31adfcb33c516f0add6bf", "5af33d721d5d613360e39912", "we ana kamaaaaan").then((r)=>{
 // 		console.log(JSON.stringify(r,null,2));
@@ -37,11 +37,11 @@ const { Connection } = require('./connections');
 
 
 
-Post.getPosts("5af31adfcb33c516f0add6bf", false).then((r)=>{
-	console.log(JSON.stringify(r,null,2));
-}).catch((e)=>{
-	console.log(e);
-});
+// Post.getPosts("5af31adfcb33c516f0add6bf", false).then((r)=>{
+// 	console.log(JSON.stringify(r,null,2));
+// }).catch((e)=>{
+// 	console.log(e);
+// });
 
 
 // let x = new Post;

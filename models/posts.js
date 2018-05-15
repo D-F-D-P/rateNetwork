@@ -176,11 +176,11 @@ schema.statics.getPosts = function(id, profile)
 		},
 		{
 			$addFields: {
-				rates: {
+				likes: {
 		            '$filter': {
 		                input: '$activities',
 		                as: 'arr',
-		                cond: { $eq: ['$$arr.type', 'rate'] }
+		                cond: { $eq: ['$$arr.type', 'like'] }
 		            }
 				},
 				comments: {

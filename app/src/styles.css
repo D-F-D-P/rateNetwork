@@ -133,6 +133,7 @@ a.log {
   font-size: 1.2rem;
   font-weight: 700; }
 
+
 .u-center-text {
   text-align: center !important; }
 
@@ -219,7 +220,12 @@ a.log {
   border-radius: 2px;
   font-weight: 400;
   cursor: pointer; }
-
+  .count {
+  color: #746566a8;
+  font-size: 1.2rem;
+  font-weight: 700; 
+margin-top: 2px;
+}
 .btn-remove {
   background-color: transparent;
   color: #746566a8;
@@ -399,9 +405,10 @@ a.log {
   left: 0;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 9999;
+  transition: all .3s; 
   opacity: 0;
-  visibility: hidden;
-  transition: all .3s; }
+  display: none;
+}
   @supports (-webkit-backdrop-filter: blur(10px)) or (backdrop-filter: blur(10px)) {
     .popup {
       -webkit-backdrop-filter: blur(10px);
@@ -409,7 +416,7 @@ a.log {
       background-color: rgba(0, 0, 0, 0.3); } }
   .popup__content {
     width: 40rem;
-    height: 60rem;
+    height: 50rem;
     display: block;
     margin: 2rem auto;
     background-color: rgba(255, 255, 255, 0.8);
@@ -821,6 +828,8 @@ a.log {
   .person__caption {
     display: flex;
     flex-direction: column;
+    
+    justify-content: center;
     margin-left: .2rem;
     align-self: center; }
   .person__name {

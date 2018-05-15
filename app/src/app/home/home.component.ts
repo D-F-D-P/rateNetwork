@@ -17,6 +17,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   name = '';
   posts = [];
   activityLog = [];
+  popup = false;
+  popupArr = [];
+  
+  showPopup(arr){
+    if(arr.length > 0){
+      this.popupArr = arr
+      this.popup = true;
+    }
+  }
+
+  hidePopup(){
+    this.popup = false;
+  }
+
+
   indexcolors = [
         "#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
@@ -47,6 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   updateView(){
     this.appService.getHome().subscribe((response)=>{
+        this.popup = false;
         this.name = response.name;
         this.id = this.appService.id;
         this.posts = response.posts;
@@ -85,6 +101,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.appService.removeComment(id).subscribe(()=>this.updateView());
   }
 
+  checkLike(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if(this.compare(arr[i].user_id))return true;
+    }
+    return false;
+  }
+
+  likePost(id) {
+    this.appService.likePost(id).subscribe(()=>this.updateView());
+  }
+
+  unlikePost(id) {
+    this.appService.unlikePost(id).subscribe(()=>this.updateView());
+  }
   
   follow(id) {
     this.appService.follow(id).subscribe(()=>this.updateSuggestions());
@@ -92,7 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   compare(id) {
-    if(id == this.id){
+    if(id == this.appService.id){
       return true;
     }
     return false;

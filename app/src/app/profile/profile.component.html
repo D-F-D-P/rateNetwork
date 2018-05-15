@@ -7,10 +7,10 @@
                 </div>
                 <div class="user__caption">
                     <div class="user__name">{{name}}</div>
-                    <div class="user__rate">{{rate || '0.0'}}</div>
+              <button *ngIf="status == 'follower'  || status == 'stranger'" (click)="follow(id)" class="btn-follow2">follow</button>
+              <button *ngIf="status == 'following' || status == 'both'" (click)="unfollow(id)" class="btn-follow2">unfollow</button>      
                 </div>
-              <button *ngIf="status == 'follower'" (click)="follow(id)" class="btn-follow2">follow</button>
-              <button *ngIf="status == 'following' || status == 'both'" (click)="unfollow(id)" class="btn-follow2">unfollow</button>
+              
 
             </a>
 
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="posts" *ngIf="this.section == 'activity'">
-                        <div class="posts__add-post">
+                        <div class="posts__add-post" *ngIf="status == 'owner'">
                             <form action="" class="posts__add">
                                 <input type="text" class="posts__add__input" placeholder="whats on tour mind..." #in>
                                 <button (click)="addPost(in.value);in.value = '';" type="submit" class="btn-post">Post</button>
@@ -145,7 +145,11 @@
                                     </div>
                                     <div class="posts__post-options">
                                         <div class="post-rate"></div>
-                                        <button (click)="sharePost(post._id)" class="btn-remove">share </button>
+                                        <button *ngIf="!checkLike(post.likes)" (click)="likePost(post._id)" class="btn-remove">Like</button>
+                                        <button *ngIf="checkLike(post.likes)" (click)="unlikePost(post._id)" class="btn-remove">unlike</button>
+                                        <a (click)="showPopup(post.likes)" class="count link">({{post.likes.length}})</a>
+                                        <button (click)="sharePost(post._id)" class="btn-remove">Share </button>
+                                        <a (click)="showPopup(post.shares)" class="count link">({{post.shares.length}})</a>
                                         
                                     </div>
                                     <div class="posts__post-comments">
@@ -176,3 +180,29 @@
             </div>
 
     </section>
+
+        <div class="popup" id="popup" [ngStyle]="{'opacity': popup ? 1 : 0,'display': popup ? 'block' : 'none'}">
+            <div class="popup__content">
+                    <button (click)="hidePopup()" class="btn-remove"><img  class="remove-icon" src="assets/img/delete-button.svg" ></button>
+                    <div class="commenters">
+                            <div class="person" *ngFor="let person of popupArr">
+                                <a [routerLink]="['/profile']" [queryParams]="{'id':person.user_id}" class="person__wraper">
+           
+
+                                <div class="person__shape" [ngStyle]="{'backgroundColor': indexcolors[person.name.charCodeAt(0)% 128]}">
+                                    <span class="caption-letter">{{person.name.slice(0,1)}}</span>
+
+                                </div>
+
+                                    <div class="person__caption">
+                                        <div class="person__name">{{person.name}}</div>
+                                       
+    
+                                    </div>
+                                </a>
+                                <button class="btn-follow">view profile</button>
+                                
+                            </div>
+                    </div>                
+            </div>
+        </div>

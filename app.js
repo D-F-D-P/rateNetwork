@@ -204,15 +204,22 @@ app.post('/api/post/share', authenticate, function (req, res) {
           }
         ]).then((r)=>{
         r = r && r[0];
-        User.getActiveFollwers(req.user._id).then((ids)=>{
-          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify(ids, req.user.name + " has shared " + r.name + "'s post !", 'log');
-        });
-        User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
-          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify(ids, req.user.name + " has shared " + r.name + "'s post !", 'log');
-        });
-        notify([r.user_id.toString()], req.user.name + " has shared your post !", 'notification');
+        if (r.user_id.toString() !== req.user.id) {
+          User.getActiveFollwers(req.user._id).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has shared " + r.name + "'s post !", 'log');
+          });
+          User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has shared " + r.name + "'s post !", 'log');
+          });
+          notify([r.user_id.toString()], req.user.name + " has shared your post !", 'notification');
+        }else{
+          User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has shared his post !", 'log');
+          });
+        }
       })
     });
   }
@@ -254,23 +261,30 @@ app.post('/api/post/comment', authenticate, function (req, res) {
           }
         ]).then((r)=>{
         r = r && r[0];
-        User.getActiveFollwers(req.user._id).then((ids)=>{
-          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify(ids, req.user.name + " has commented on " + r.name + "'s post !", 'log');
-        });
-        User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
-          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify(ids, req.user.name + " has commented on " + r.name + "'s post !", 'log');
-        });
-        notify([r.user_id.toString()], req.user.name + " has commented on your post !", 'notification');
+        if (r.user_id.toString() !== req.user.id) {
+          User.getActiveFollwers(req.user._id).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has commented on " + r.name + "'s post !", 'log');
+          });
+          User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has commented on " + r.name + "'s post !", 'log');
+          });
+          notify([r.user_id.toString()], req.user.name + " has commented on your post !", 'notification');
+        }else{
+          User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has commented on his post !", 'log');
+          });
+        }
       })
     });
   }
 })
 
-app.post('/api/post/rate', authenticate, function (req, res) {
-  if (req.body.id && req.body.rate) {
-    Activity.rate(req.user._id, req.body.id, req.body.rate).then(()=>{
+app.post('/api/post/like', authenticate, function (req, res) {
+  if (req.body.id) {
+    Activity.like(req.user._id, req.body.id).then(()=>{
       res.json({success: true});
       Post.aggregate([
           {
@@ -304,22 +318,30 @@ app.post('/api/post/rate', authenticate, function (req, res) {
           }
         ]).then((r)=>{
         r = r && r[0];
-        User.getActiveFollwers(req.user._id).then((ids)=>{
-          ids = ids.filter(id=>id.toString()!=r.user_id.toString());
-          notify(ids, req.user.name + " has rated " + r.name + "'s post !", 'log');
-        });
-        User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
-          notify(ids, req.user.name + " has rated " + r.name + "'s post !", 'log');
-        });
-        notify([r.user_id.toString()], req.user.name + " has rated your post !", 'notification');
+        if (r.user_id.toString() !== req.user.id) {
+          User.getActiveFollwers(req.user._id).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has liked " + r.name + "'s post !", 'log');
+          });
+          User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has liked " + r.name + "'s post !", 'log');
+          });
+          notify([r.user_id.toString()], req.user.name + " has liked your post !", 'notification');
+        }else{
+          User.getActiveFollwers(r.user_id.toString()).then((ids)=>{
+            ids = ids.filter(id=>id.toString()!=r.user_id.toString());
+            notify(ids, req.user.name + " has liked his post !", 'log');
+          });
+        }
       })
     });
   }
 })
 
-app.post('/api/post/unrate', authenticate, function (req, res) {
+app.post('/api/post/unlike', authenticate, function (req, res) {
   if (req.body.id) {
-    Activity.rate(req.user._id, req.body.id).then(()=>{
+    Activity.unlike(req.user._id, req.body.id).then(()=>{
       res.json({success: true});
     });
   }

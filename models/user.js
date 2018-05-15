@@ -286,8 +286,24 @@ schema.statics.suggested_friends = function (id){
 				"_id": "$results._id",
 				"name": "$results.name"
 			}
-		}
+		},
+		{
+			$sample: {
+				size: 3
+			} 
+		}, 
+        { "$group": { 
+            "_id": "$_id", 
+            "name": { "$first": "$name" } 
+        }},
+		{
+			$match: {
+				_id : {"$ne":mongoose.Types.ObjectId(id)}
+			}
+		}	
 	];
+	
+	
 	let s1 = steps.slice();
 	s1.unshift({
 		$match: {
@@ -297,7 +313,59 @@ schema.statics.suggested_friends = function (id){
 	return Connection.aggregate(s1).then((results)=>{
 		if (results.length <= 3) {
 			console.log(12);
-			return Connection.aggregate(steps);
+			let s2 = steps.slice();
+			s2 = [
+				{
+					$match: {
+						_id : {"$ne":mongoose.Types.ObjectId(id)}
+					}
+				},
+				{
+					$project: {
+						password : 0
+					}
+				},
+				{
+		  			$lookup:
+				     {
+				       from: "connections",
+				       let: { localId: "$_id" },
+				       pipeline: [
+					          { 
+					          		$match:
+						            { 
+						            	$expr: { $and: [
+						            		{$eq: [ "$from",  mongoose.Types.ObjectId(id)  ]},
+						            		{$eq: [ "$to",  "$$localId"  ]}
+						            	] }
+						            }
+					          }
+							],
+						as: "results"
+						}
+				},
+				{
+					$addFields: {
+						'results': {$size: "$results"}
+					}
+				},
+				{
+					$match: {
+						'results': 0
+					}
+				},
+				{
+					$project:{
+						results: 0
+					}
+				},
+				{
+					$sample: {
+						size: 3
+					} 
+				}
+			];
+			return User.aggregate(s2);
 		}else{
 			return results;
 		}

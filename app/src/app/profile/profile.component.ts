@@ -21,6 +21,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   rate = 0.0;
   posts = [];
   activityLog = [];
+  popup = false;
+  popupArr = [];
   indexcolors = [
         "#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
@@ -47,12 +49,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private appService: AppService) { }
 
   updateSuggestions() {
-    this.updateView(this.id);
+    this.updateView(this.id || this.route.snapshot.params.id);
     this.suggestedFriends = this.appService.suggestedFriends;
   }
 
   updateView(id){
     this.appService.getProfile(id).subscribe((response)=>{
+        this.popup = false;
         this.section = 'activity';
         this.followers = response.followers;
         this.following = response.following;
@@ -68,6 +71,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
           },0)
         },0) / i;
       })
+  }
+
+  showPopup(arr){
+    if(arr.length > 0){
+      this.popupArr = arr
+      this.popup = true;
+    }
+  }
+
+  hidePopup(){
+    this.popup = false;
   }
 
   ngOnInit() {
@@ -96,6 +110,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.appService.addComment(id, body).subscribe(()=>this.updateView(this.id));
   }
 
+  likePost(id) {
+    this.appService.likePost(id).subscribe(()=>this.updateView(this.id));
+  }
+
+  unlikePost(id) {
+    this.appService.unlikePost(id).subscribe(()=>this.updateView(this.id));
+  }
+
   addPost(body) {
     this.appService.addPost(body).subscribe(()=>this.updateView(this.id));
   }
@@ -112,8 +134,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.appService.unfollow(id).subscribe(()=>this.updateSuggestions());
   }
 
+  checkLike(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if(this.compare(arr[i].user_id))return true;
+    }
+    return false;
+  }
+
   compare(id) {
-    if(id == this.id){
+    if(id == this.appService.id){
       return true;
     }
     return false;

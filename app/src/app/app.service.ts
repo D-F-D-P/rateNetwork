@@ -111,7 +111,13 @@ export class AppService {
 
   unfollow(id) {
     const headers = new Headers({ 'x-access-token': this.token });
-    return this.http.post('/api/unfollow', {id},{ headers: headers }).map(res => res.json());
+    return this.http.post('/api/unfollow', {id},{ headers: headers }).map(res => {
+      this.getSuggestedFriends().subscribe((r)=>{
+        this.suggestedFriends = r;
+        this.suggestedFriendsSubject.next();
+      })
+      return res.json()
+    });
   }
 
   addPost(body) {
@@ -129,14 +135,14 @@ export class AppService {
     return this.http.post('/api/post/share', {id},{ headers: headers }).map(res => res.json());
   }
 
-  ratePost(id, rate) {
+  likePost(id) {
     const headers = new Headers({ 'x-access-token': this.token });
-    return this.http.post('/api/post/rate', {id, rate},{ headers: headers }).map(res => res.json());
+    return this.http.post('/api/post/like', {id},{ headers: headers }).map(res => res.json());
   }
 
-  unratePost(id) {
+  unlikePost(id) {
     const headers = new Headers({ 'x-access-token': this.token });
-    return this.http.post('/api/post/unrate', {id},{ headers: headers }).map(res => res.json());
+    return this.http.post('/api/post/unlike', {id},{ headers: headers }).map(res => res.json());
   }
 
   addComment(id,body) {
